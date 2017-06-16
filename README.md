@@ -1,11 +1,6 @@
 # Two Force Choice N-back Paradigm
 ==============================
 
-15/06/2017
-first working version
-refactored from the task designed by Konishi and colleagues, with new trial type
-**mind wandering probe is not supported in this version**
-
 Features:
     Stand-alone trial generator
     Three condtions: 1-back, 0-back, recognition
