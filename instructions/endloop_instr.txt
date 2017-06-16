@@ -1,0 +1,13 @@
+This is the end of the task. 
+Now you will be asked to describe your thoughts while mind wandering during the task.
+When answering these questions please remember there are no right answers, but please try to answer them as fast as possible. 
+
+Please use number '1' to '4' to indicate how much each description reflects your experience.
+
+	'1' indicates 'not at all'. 
+	'2' indicates 'slightly'. 
+	'3' indicates 'moderately'. 
+	'4' indicates 'completely'.
+
+Press SPACE to start the questions.
+#
