@@ -100,6 +100,7 @@ if __name__ == "__main__":
     
     # ending message
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
+    msgTxT = Text(window=Experiment.window, text=endtxt, color='black')
     msgTxt.setText(endtxt)
     msgTxt.draw()
     win.flip()
