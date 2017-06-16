@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-0.0.1
+
 trial design
 
 all kind of supporting trial types
