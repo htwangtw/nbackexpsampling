@@ -2,9 +2,17 @@ Advance to instructions...
 #
 Welcome to our experiment.
 
-write instruction here
+In it you will be asked to attend to pairs of different shapes of differnt textures, divided by a coloured vertical line in the middle of the screen. The vertical line will always be the same colour in the given condition. 
+You will only be required to keep your eyes in the centre of the screen and attend to the shapes most of the time.
 
+Depending on the condition when you are presented with a target or question mark(s) you must indicate:
+	In BLUE CONDITION which side the target is on the CURRENT TRIAL;
+	In BLACK CONDITION which stimulus was on the PREVIOUS TRIAL;
+	In RED CONDITION which side the target was on the PREVIOUSTRIAL.
 
+The target and the correct answer will be either completely identical, or share only one feature.
+
+The left arrow button indicates LEFT, the right arrow button indicates RIGHT.
 You should try to be as quick and accurate as possible.
 
 Press RETURN to start the task.
