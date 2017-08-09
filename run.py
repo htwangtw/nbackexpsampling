@@ -55,6 +55,8 @@ if __name__ == "__main__":
     fixation = fixation_cross(window=Experiment.window, color='black')
     stimulus = responsescreen(window=Experiment.window)
     switch = Text(window=Experiment.window, text='Switch', color='black')    
+    endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
+    endmsg = Text(window=Experiment.window, text=endtxt, color='black')
 
     # generate trials
     Experiment.trials= next(trial_generator)
@@ -99,10 +101,7 @@ if __name__ == "__main__":
         respRT = None
     
     # ending message
-    endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
-    msgTxT = Text(window=Experiment.window, text=endtxt, color='black')
-    msgTxt.setText(endtxt)
-    msgTxt.draw()
+    endmsg.draw()
     win.flip()
     core.wait(1)
 

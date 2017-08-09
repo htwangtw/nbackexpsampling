@@ -8,7 +8,7 @@ To do: change the current 2-back setting to n-back
 
 import codecs
 import csv
-from random import randrange, shuffle
+from random import randrange, shuffle, randint
 
 from . import trialtype
 from .trialtype import *
@@ -55,11 +55,14 @@ class experiment_parameters(object):
         condition_path
             path to the condition file
         '''
-        conditions = []
-        with codecs.open(condition_path, 'r', encoding='utf8') as f:
-            reader = csv.reader(f)
-            for cond in reader:
-                conditions.append(cond[0])
+        
+        conditions, _ = load_conditions_dict(condition_path)
+
+        # conditions = []
+        # with codecs.open(condition_path, 'r', encoding='utf8') as f:
+        #     reader = csv.reader(f)
+        #     for cond in reader:
+        #         conditions.append(cond[0])
         self.conditions = conditions
     
     def load_header(self, trialheader_path):
@@ -172,8 +175,13 @@ class trial_builder(object):
         trial_NoGo = trial_finder.get(trial_type='NoGo')
         trial_NoGo.lst_header = trial_headers
 
-        trial_Go = trial_finder.get(trial_type=block)
-        trial_Go.lst_header = trial_headers
+        trial_Go1 = trial_finder.get(trial_type=block['GoTrial_1'])
+        trial_Go1.lst_header = trial_headers
+
+        trial_Go2 = trial_finder.get(trial_type=block['GoTrial_2'])
+        trial_Go2.lst_header = trial_headers
+        
+        trial_Go = [trial_Go1, trial_Go2]
 
         return trial_NoGo, trial_Go
 
@@ -254,17 +262,19 @@ class trial_builder(object):
                         for j in range(n_NoGo):
                             cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
                             self.counter -= t
-                            self.save_trial(cur_trial, block)
+                            self.save_trial(cur_trial, block['Condition'])
                         # generate the go trial
-                        cur_trial, t = next(trial_Go.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial)) # n-back
+                        # go trial: 1 feature or 2 feature?
+                        idx = randint(0, 1)
+                        cur_trial, t = next(trial_Go[idx].generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial)) # n-back
                         self.counter -= t
-                        self.save_trial(cur_trial, block)
+                        self.save_trial(cur_trial, block['Condition'])
 
                     # add 1~ 2 no-go trials and then a switch screen to end this block
                     for k in range(randrange(1, 3, 1)):
                         cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
                         self.counter -= t
-                        self.save_trial(cur_trial, block)
+                        self.save_trial(cur_trial, block['Condition'])
                     
                     cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
                     cur_trial['TrialType'] = 'Switch'
