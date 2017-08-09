@@ -3,7 +3,7 @@
 0.0.1
 
 build the data structure for the experiment
-
+To do: change the current 2-back setting to n-back
 '''
 
 import codecs
@@ -92,7 +92,11 @@ class trial_finder(object):
             reader = csv.DictReader(f)
             #loop through csv list
             for row in reader:
-                #if current rows trial type is equal to input, print that row
+                # first convert strings to float
+                for item in row.keys():
+                    row[item] = str2float(row[item])
+
+                # if current rows trial type is equal to input, print that row
                 if trial_type == row[self.trialspec_col]:
                     trial_spec = row
 
@@ -101,6 +105,7 @@ class trial_finder(object):
 
                 else:
                     pass
+
 
 class trial_builder(object):
     '''
@@ -232,7 +237,7 @@ class trial_builder(object):
                 # initalize the block
                 self.dict_trials = []
                 self.counter = counter
-                self.last_trial = None
+                self.last_trial = None # n-back
                 
                 # store the trial index here, if need to regenerate this block, load from here
                 self.init_trial_index = self.trial_index
@@ -251,7 +256,7 @@ class trial_builder(object):
                             self.counter -= t
                             self.save_trial(cur_trial, block)
                         # generate the go trial
-                        cur_trial, t = next(trial_Go.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
+                        cur_trial, t = next(trial_Go.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial)) # n-back
                         self.counter -= t
                         self.save_trial(cur_trial, block)
 
@@ -278,3 +283,16 @@ class trial_builder(object):
                         print 'save this block'
                         run += self.dict_trials
             yield run
+
+
+                
+def str2float(string):
+    '''
+    detect if the string can be converted to float.
+    if so, return the converted result
+    else, return the input string
+    '''
+    try:
+        return float(string)
+    except ValueError:
+        return string

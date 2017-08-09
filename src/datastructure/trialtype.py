@@ -44,7 +44,7 @@ class NoGo(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        t: float
             total time of this trial, for counter
 
         '''
@@ -53,23 +53,23 @@ class NoGo(object):
 
         dict_row['TrialIndex'] = None
         dict_row['Condition'] = None
-
+        
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
         dict_row['stimPicMid'] = None
         dict_row['Ans'] = 'None'
 
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row, self.trial_spec['trial_t_total']
         
 
 
 class ZeroBack(object):
     '''
-    generate a one back trial detail
+    generate a zero back trial detail
 
     trial_spec: dict
         trial specification
@@ -98,7 +98,7 @@ class ZeroBack(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        self.trial_spec['trial_t_total']: float
             total time of this trial, for counter
 
         '''
@@ -109,8 +109,8 @@ class ZeroBack(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
@@ -121,13 +121,13 @@ class ZeroBack(object):
         else:
             dict_row['Ans'] = 'right'
 
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row,self.trial_spec['trial_t_total']
 
     
 
 class OneBack(object):
     '''
-    generate a one back trial detail
+    generate a one back recall trial detail
 
     trial_spec: dict
         trial specification
@@ -156,7 +156,7 @@ class OneBack(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        self.trial_spec['trial_t_total']: float
             total time of this trial, for counter
 
         '''
@@ -166,8 +166,8 @@ class OneBack(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
 
         dict_row['stimPicLeft'] = '?'
         dict_row['stimPicRight'] = '?'
@@ -178,11 +178,11 @@ class OneBack(object):
         else:
             dict_row['Ans'] = 'right'
 
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row,self.trial_spec['trial_t_total']
 
 class Recognition(object):
     '''
-    generate a one back trial detail
+    generate a one back recognition trial detail
 
     trial_spec: dict
         trial specification
@@ -211,7 +211,7 @@ class Recognition(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        self.trial_spec['trial_t_total']: float
             total time of this trial, for counter
 
         '''
@@ -221,13 +221,14 @@ class Recognition(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
 
         # decide to preserve left or right
         for f1 in stimulus_generator.feature1: 
             if f1 not in [last_trial['stimPicLeft'][0], last_trial['stimPicRight'][0]]:
                 distract_feature1 = f1
+                
         for f2 in stimulus_generator.feature2: 
             if f2 not in [last_trial['stimPicLeft'][1], last_trial['stimPicRight'][1]]:
                 distract_feature2 = f2
@@ -245,12 +246,12 @@ class Recognition(object):
             dict_row['stimPicMid'] = '?'
             dict_row['Ans'] = 'right'
            
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row,self.trial_spec['trial_t_total']
 
 
 class ZeroBack_feature(object):
     '''
-    generate a one back trial detail
+    generate a zero back trial detail
 
     trial_spec: dict
         trial specification
@@ -279,7 +280,7 @@ class ZeroBack_feature(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        self.trial_spec['trial_t_total']: float
             total time of this trial, for counter
 
         '''
@@ -290,16 +291,17 @@ class ZeroBack_feature(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
 
         target_item = choice(item_list)
         target_feat = choice(target_item)
-        # decide to preserve left or right
 
+        # decide to preserve left or right
+        # they all the items on screen can only share on feature
         if target_feat in stimulus_generator.feature1:
             for f2 in stimulus_generator.feature2: 
                 if f2 not in [dict_row['stimPicLeft'][1], dict_row['stimPicRight'][1]]:
@@ -317,7 +319,7 @@ class ZeroBack_feature(object):
         else:
             dict_row['Ans'] = 'right'
 
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row,self.trial_spec['trial_t_total']
 
     
 
@@ -352,7 +354,7 @@ class OneBack_feature(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        self.trial_spec['trial_t_total']: float
             total time of this trial, for counter
 
         '''
@@ -362,8 +364,8 @@ class OneBack_feature(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
 
         dict_row['stimPicLeft'] = '?'
         dict_row['stimPicRight'] = '?'
@@ -389,7 +391,7 @@ class OneBack_feature(object):
         else:
             dict_row['Ans'] = 'right'
 
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row,self.trial_spec['trial_t_total']
 
 
 class Recognition_feature(object):
@@ -423,7 +425,7 @@ class Recognition_feature(object):
         dict_row: dict
             a trail in dictionary 
         
-        float(self.trial_spec['trial_t_total']): float
+        self.trial_spec['trial_t_total']: float
             total time of this trial, for counter
 
         '''
@@ -433,8 +435,8 @@ class Recognition_feature(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(float(self.trial_spec['fix_t_min']), float(self.trial_spec['fix_t_max']))
-        dict_row['stimT'] = float(self.trial_spec['trial_t_total']) - dict_row['fixT']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
         # decide to preserve left or right
         for f1 in stimulus_generator.feature1: 
             if f1 not in [last_trial['stimPicLeft'][0], last_trial['stimPicRight'][0]]:
@@ -473,4 +475,4 @@ class Recognition_feature(object):
             dict_row['stimPicMid'] = '?'
             dict_row['Ans'] = 'right'
            
-        yield dict_row, float(self.trial_spec['trial_t_total'])
+        yield dict_row,self.trial_spec['trial_t_total']
