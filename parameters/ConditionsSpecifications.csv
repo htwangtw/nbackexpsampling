@@ -1,6 +1,4 @@
-OneBack
-ZeroBack
-Recognition
-OneBack_feature
-ZeroBack_feature
-Recognition_feature
+Condition,GoTrial_1,GoTrial_2
+OneBack,OneBack_feature,OneBack
+ZeroBack,ZeroBack_feature,ZeroBack
+Recognition,Recognition_feature,Recognition
