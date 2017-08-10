@@ -56,7 +56,7 @@ if __name__ == "__main__":
     stimulus = responsescreen(window=Experiment.window)
     switch = Text(window=Experiment.window, text='Switch', color='black')    
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
-    endmsg = Text(window=Experiment.window, text=endtxt, color='black')
+    end_msg = Text(window=Experiment.window, text=endtxt, color='black')
 
     # generate trials
     Experiment.trials= next(trial_generator)
@@ -101,7 +101,7 @@ if __name__ == "__main__":
         respRT = None
     
     # ending message
-    endmsg.draw()
+    end_msg.draw()
     win.flip()
     core.wait(1)
 
