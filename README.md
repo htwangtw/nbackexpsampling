@@ -1,11 +1,11 @@
 # Two Force Choice N-back Paradigm
 
 Features:
-    Stand-alone trial generator
+Stand-alone trial generator
     
-    Three condtions: 1-back, 0-back, recognition
+Three condtions: 1-back, 0-back, recognition
     
-    New project structure!
+New project structure!
 
 Project Organization
 ------------
