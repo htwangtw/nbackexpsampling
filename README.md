@@ -2,7 +2,9 @@
 
 Features:
     Stand-alone trial generator
+    
     Three condtions: 1-back, 0-back, recognition
+    
     New project structure!
 
 Project Organization
