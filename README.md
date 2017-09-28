@@ -1,5 +1,4 @@
 # Two Force Choice N-back Paradigm
-==============================
 
 Features:
     Stand-alone trial generator
