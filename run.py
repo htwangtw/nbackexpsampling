@@ -20,7 +20,7 @@ INFO = {
     } 
 
 # set up enviroment variables and generators
-settings = get_settings(env='lab', test=True) # set to False when testing
+settings = get_settings(env='lab', test=True) # set to False when collecting participant
 
 trial_generator, headers =  get_trial_generator()
 
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
     stimulus = responsescreen(window=Experiment.window)
-    switch = Text(window=Experiment.window, text='Switch', color='black')    
+    switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = Text(window=Experiment.window, text=endtxt, color='black')
 
@@ -101,15 +101,13 @@ if __name__ == "__main__":
         respRT = None
     
     # ending message
-    end_msg.draw()
-    win.flip()
-    core.wait(1)
-
-    # close the program
-    Experiment.window.close()
+    end_msg.duration = 2
+    end_msg.show()
 
     logging.flush()
     # change output files to read only
     read_conly(experiment_info['DataFile'])
     read_conly(experiment_info['LogFile'])
+    # quit
+    Experiment.window.close()
     core.quit()
