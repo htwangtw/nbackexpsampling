@@ -77,7 +77,6 @@ if __name__ == "__main__":
         
         # show stimulus screen and catch response
         stim_t, KeyResp, KeyPressTime, respRT, correct = stim.show(timer)
-
         # post response fixation
         if respRT and trial['stimT'] - respRT > 0:
             fixation.duration = trial['stimT'] - respRT
@@ -102,7 +101,7 @@ if __name__ == "__main__":
     
     # ending message
     end_msg.duration = 2
-    end_msg.show()
+    end_msg.show(timer)
 
     logging.flush()
     # change output files to read only

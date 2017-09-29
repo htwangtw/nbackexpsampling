@@ -44,16 +44,8 @@ class fixation_cross(object):
         
     def set_trial(self, trial):
         self.duration = trial['fixT']
-        # change color of self.line and self.dash base in trial['Condition']
-        if trial['Condition'] in ['OneBack', 'OneBack_feature']:
-             self.line.fillColor = 'red'
-             self.dash.fillColor = 'red'
-        elif trial['Condition'] in ['ZeroBack', 'ZeroBack_feature']:
-             self.line.fillColor = 'blue'
-             self.dash.fillColor = 'blue'
-        else:
-            self.line.fillColor = 'black'
-            self.dash.fillColor = 'black'
+        self.line.fillColor = 'black'
+        self.dash.fillColor = 'black'
 
     def show(self, clock):
         self.line.draw()
@@ -120,7 +112,7 @@ class responsescreen(object):
 
         self.quest_left = visual.TextStim(self.window, text='?', height=300, pos=(-250, 0), color='black')
         self.quest_right = visual.TextStim(self.window, text='?', height=300, pos=(250, 0), color='black')
-        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), color='white')
+        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), color='black')
 
         self.present_left = None
         self.present_right = None
@@ -130,17 +122,16 @@ class responsescreen(object):
         self.duration = trial['stimT']
         self.ans = trial['Ans']
         # change color of self.line and self.dash base in trial['Condition']
-
-        if trial['Condition'] in ['OneBack', 'OneBack_feature']:
-             self.line.fillColor = 'red'
-             self.dash.fillColor = 'red'
-        elif trial['Condition'] in ['ZeroBack', 'ZeroBack_feature']:
-             self.line.fillColor = 'blue'
-             self.dash.fillColor = 'blue'
-        else:
+	if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
-
+	elif 'Recog' in trial['TrialType']:
+            self.line.fillColor = 'red'
+            self.dash.fillColor = 'red'
+        elif 'Back' in trial['TrialType']:
+            self.line.fillColor = 'blue'
+            self.dash.fillColor = 'blue'
+        
         if trial['stimPicLeft'] is '?':
             # change color of self.quest_left, self.quest_right and self.dash base in trial['Condition']
             self.present_left = self.quest_left
@@ -148,9 +139,8 @@ class responsescreen(object):
         else:
             self.image_left.setImage(trial['stimPicLeft']) 
             self.image_right.setImage(trial['stimPicRight'])
-
-            self.present_left = self.image_left
-            self.present_right = self.image_right
+        self.present_left = self.image_left
+        self.present_right = self.image_right
 
         if trial['stimPicMid'] is '?':
             self.present_mid = self.quest_mid
