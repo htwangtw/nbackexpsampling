@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 '''
-0.0.1
-
 stimulus feature generator
 '''
 

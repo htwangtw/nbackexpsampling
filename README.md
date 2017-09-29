@@ -19,18 +19,6 @@ Project Organization
     ├── instructions       <- Instructions .txt files. '#' used as page breaker   
     ├── data               <- Data generated from the task. Read-only.
     ├── parameters         <- Trial generation specification files.
-    ├── references         <- Manuals, plans for this experiemnt
     ├── src                <- Source code for use in this project.
-    │   │
-    │   ├── __init__.py    <- Makes src a Python module
-    │   ├── datastructure  <- Scripts to generate trials
-    │   │    ├── __init__.py 
-    │   │    ├── datastructure.py 
-    │   │    ├── stimulus.py 
-    │   │    └── trialtype.py
-    │   │
-    │   ├── experiment.py  <- experiment deatails
-    │   └── fileIO.py      <- file input/output
-    │   
     └── stimuli            <- stimulus photos
 
