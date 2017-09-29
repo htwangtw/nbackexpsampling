@@ -7,6 +7,7 @@ import codecs
 import csv
 import os
 import re
+import stat
 from collections import OrderedDict
 
 

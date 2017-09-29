@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 '''
-0.0.1
-
 build the data structure for the experiment
 To do: change the current 2-back setting to n-back
 '''

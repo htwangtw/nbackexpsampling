@@ -77,7 +77,6 @@ if __name__ == "__main__":
         
         # show stimulus screen and catch response
         stim_t, KeyResp, KeyPressTime, respRT, correct = stim.show(timer)
-
         # post response fixation
         if respRT and trial['stimT'] - respRT > 0:
             fixation.duration = trial['stimT'] - respRT

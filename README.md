@@ -1,5 +1,12 @@
 # Two Force Choice N-back Paradigm
-current progress: change the design according to the new plan
+Based on the task developed by Konish et al., I am working on a enhanced verison of the task.
+The task uses a n-back memory paradigm intending to induce mind-wandering.
+
+Reference:
+
+Konishi, M., McLaren, D. G., Engen, H., & Smallwood, J. (2015). Shaped by the past: the default mode network supports cognition that is independent of immediate perceptual input. PloS One, 10(6), e0132209. http://doi.org/10.1371/journal.pone.0132209
+
+
 
 Project Organization
 ------------

@@ -6,7 +6,7 @@ Define global and environment-specific settings here.
 
 # set the two features we used for making the stimulus
 shape = ['square', 'triangle', 'circle']
-texture = ['dot', 'solid', 'stripe']
+# texture = ['dot', 'solid', 'stripe']
 
 # locate path of experiment specification related files
 condition_path = './parameters/ConditionsSpecifications.csv'
@@ -20,7 +20,7 @@ trialspec_col = 'trial_type'
 
 from psychopy import logging
 from src.fileIO import write_csv, create_headers
-from src.datastructure.stimulus import stimulus_twofeat
+from src.datastructure.stimulus import stimulus_onefeat
 from src.datastructure.datastructure import *
 from src.datastructure import trialtype
 
@@ -106,8 +106,8 @@ def get_trial_generator():
     find_trial = trial_finder(trialspec_path=trialspec_path, trialspec_col=trialspec_col)
 
     # create stimulus generators
-    stimulus_generator = stimulus_twofeat(feature1=shape, feature2=texture)
-
+    # stimulus_generator = stimulus_twofeat(feature1=shape, feature2=texture)
+    stimulus_generator = stimulus_onefeat(feature=shape)
     # now build the trials
     builder = trial_builder()
     # build the trial generator
@@ -151,4 +151,7 @@ def parse_stimulus_name(trial):
     for key in trial.keys():
         if type(trial[key]) is tuple:
             trial[key] = tup2str(stimulus_dir, trial[key], '.png')
+        elif 'stimPic' in key and type(trial[key]) is str:
+            if trial[key] not in ['?', 'SWITCH']:
+                trial[key] = stimulus_dir + trial[key] + '.png'
     return trial

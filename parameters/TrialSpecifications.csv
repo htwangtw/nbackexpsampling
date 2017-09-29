@@ -7,3 +7,5 @@ MWQ,0.5,0.5,2,2,2.5,13,13
 OneBack_feature,1,2.5,3.5,5,6,1,1
 ZeroBack_feature,1,2.5,3.5,5,6,1,1
 Recognition_feature,1,2.5,3.5,5,6,1,1
+OneBackRecog,1,2.5,3.5,5,6,1,1
+ZeroBackRecog,1,2.5,3.5,5,6,1,1

@@ -180,6 +180,119 @@ class OneBack(object):
 
         yield dict_row,self.trial_spec['trial_t_total']
 
+class ZeroBackRecog(object):
+    '''
+    generate a zero back trial detail
+
+    trial_spec: dict
+        trial specification
+
+    lst_header: list
+        headers for generating dictionary to store trial details
+
+    '''
+    def __init__(self, trial_spec, lst_header):
+        self.trial_spec = trial_spec
+        self.lst_header = lst_header
+
+    def generate_trial(self, stimulus_generator, last_trial):
+        '''
+        a generater that creates trials
+
+        stimulus_generator: generator
+            stimulus generator
+        
+        last_trial: dict
+            the previous trial; some trials need this information
+            if it's a zero-back or no-go trial, None type is accepted 
+
+        output
+
+        dict_row: dict
+            a trail in dictionary 
+        
+        self.trial_spec['trial_t_total']: float
+            total time of this trial, for counter
+
+        '''
+        dict_row = {key: None for key in self.lst_header}
+        item_list = next(stimulus_generator.generate())
+
+        dict_row['TrialIndex'] = None
+        dict_row['Condition'] = None
+
+        dict_row['TrialType'] = self.trial_spec['trial_type']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+
+        dict_row['stimPicLeft'] = item_list[0]
+        dict_row['stimPicRight'] = item_list[1]
+        dict_row['stimPicMid'] = choice(stimulus_generator.stimuli)
+
+        if dict_row['stimPicMid'] in item_list:
+            dict_row['Ans'] = 'left'
+        else:
+            dict_row['Ans'] = 'right'
+
+        yield dict_row,self.trial_spec['trial_t_total']
+
+    
+
+class OneBackRecog(object):
+    '''
+    generate a one back recall trial detail
+
+    trial_spec: dict
+        trial specification
+
+    lst_header: list
+        headers for generating dictionary to store trial details
+        
+    '''
+    def __init__(self, trial_spec, lst_header):
+        self.trial_spec = trial_spec
+        self.lst_header = lst_header
+
+    def generate_trial(self, last_trial, stimulus_generator):
+        '''
+        a generater that creates trials
+
+        stimulus_generator: generator
+            stimulus generator
+        
+        last_trial: dict
+            the previous trial; some trials need this information
+            if it's a zero-back or no-go trial, None type is accepted 
+
+        output
+
+        dict_row: dict
+            a trail in dictionary 
+        
+        self.trial_spec['trial_t_total']: float
+            total time of this trial, for counter
+
+        '''
+        dict_row = {key: None for key in self.lst_header}
+
+        dict_row['TrialIndex'] = None
+        dict_row['Condition'] = None
+
+        dict_row['TrialType'] = self.trial_spec['trial_type']
+        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+
+        dict_row['stimPicLeft'] = '?'
+        dict_row['stimPicRight'] = '?'
+        dict_row['stimPicMid'] = choice(stimulus_generator.stimuli)
+        
+        if dict_row['stimPicMid'] in [last_trial['stimPicLeft'], last_trial['stimPicLeft']]:
+            dict_row['Ans'] = 'left'
+        else:
+            dict_row['Ans'] = 'right'
+
+        yield dict_row,self.trial_spec['trial_t_total']
+
 class Recognition(object):
     '''
     generate a one back recognition trial detail
