@@ -102,7 +102,7 @@ if __name__ == "__main__":
     
     # ending message
     end_msg.duration = 2
-    end_msg.show()
+    end_msg.show(timer)
 
     logging.flush()
     # change output files to read only
