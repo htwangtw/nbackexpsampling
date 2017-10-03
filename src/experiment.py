@@ -139,8 +139,8 @@ class responsescreen(object):
         else:
             self.image_left.setImage(trial['stimPicLeft'])
             self.image_right.setImage(trial['stimPicRight'])
-        self.present_left = self.image_left
-        self.present_right = self.image_right
+            self.present_left = self.image_left
+            self.present_right = self.image_right
 
         if trial['stimPicMid'] is '?':
             self.present_mid = self.quest_mid
