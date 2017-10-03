@@ -67,7 +67,6 @@ if __name__ == "__main__":
     for trial in Experiment.trials:
         # parse tuples to proper file names
         trial = parse_stimulus_name(trial)
-
         # prepare fixation cross and stimulus display
         fixation.set_trial(trial)       
         stim = get_stim_screen(trial, switch, stimulus)

@@ -217,7 +217,7 @@ class ZeroBackRecog(object):
         item_list = next(stimulus_generator.generate())
         # repeat the final item, so the target will have a equal chance to be
         # present / absent
-        item_list = item_list + item_list[-1]
+        item_list = item_list + item_list[-2:-1]
 
         dict_row['TrialIndex'] = None
         dict_row['Condition'] = None
@@ -273,8 +273,9 @@ class OneBackRecog(object):
         '''
         dict_row = {key: None for key in self.lst_header}
         # create a equal chance to get a present/absent target in the pre trial
+        tmp = next(stimulus_generator.generate())
         item_list = [last_trial['stimPicLeft'], last_trial['stimPicLeft']]
-        item_list += filter(lambda x: x not in last_list, item_list)*2
+        item_list += filter(lambda x: x not in item_list, tmp)*2
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
         dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])

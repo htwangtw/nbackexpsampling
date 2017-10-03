@@ -72,7 +72,7 @@ class Text(object):
         constructor.
         '''
         self.window = window
-        self.text = visual.TextStim(self.window, text=text, height=34, wrapWidth=1100, color=color)
+        self.text = visual.TextStim(self.window, text=text, height=34, wrapWidth=1100, color=color, font=sans)
         self.duration = None
 
     def set_trial(self, trial):
@@ -109,10 +109,10 @@ class responsescreen(object):
         self.image_left = visual.ImageStim(self.window, name='stimPic-left', image=None, size=(250, 250), pos=(-250, 0))
         self.image_right = visual.ImageStim(self.window, name='stimPic-right', image=None, size=(250, 250), pos=(250, 0))
         self.image_mid = visual.ImageStim(self.window, name='stimPic-middle', image=None, size=(100, 100),pos=(0,0))
-
-        self.quest_left = visual.TextStim(self.window, text='?', height=300, pos=(-250, 0), color='black')
-        self.quest_right = visual.TextStim(self.window, text='?', height=300, pos=(250, 0), color='black')
-        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), color='black')
+        
+        self.quest_left = visual.TextStim(self.window, text='?', height=100, pos=(-250, 0), wrapWidth=500, color='black')
+        self.quest_right = visual.TextStim(self.window, text='?', height=100, pos=(250, 0), wrapWidth=500, color='black')
+        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), wrapWidth=200, color='white')
 
         self.present_left = None
         self.present_right = None
@@ -122,17 +122,17 @@ class responsescreen(object):
         self.duration = trial['stimT']
         self.ans = trial['Ans']
         # change color of self.line and self.dash base in trial['Condition']
-	    if 'NoGo'in trial['TrialType']:
+        if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
-	    elif 'Recog' in trial['TrialType']:
+        elif 'Recog' in trial['TrialType']:
             self.line.fillColor = 'red'
             self.dash.fillColor = 'red'
         elif 'Back' in trial['TrialType']:
             self.line.fillColor = 'blue'
             self.dash.fillColor = 'blue'
 
-        if 'OneBack' in trial['TrialType']:
+        if '?' == trial['stimPicLeft']:
             # change color of self.quest_left, self.quest_right and self.dash base in trial['Condition']
             self.present_left = self.quest_left
             self.present_right = self.quest_right
