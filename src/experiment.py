@@ -109,9 +109,8 @@ class responsescreen(object):
         self.image_left = visual.ImageStim(self.window, name='stimPic-left', image=None, size=(250, 250), pos=(-250, 0))
         self.image_right = visual.ImageStim(self.window, name='stimPic-right', image=None, size=(250, 250), pos=(250, 0))
         self.image_mid = visual.ImageStim(self.window, name='stimPic-middle', image=None, size=(100, 100),pos=(0,0))
-        
-        self.quest_left = visual.TextStim(self.window, text='?', height=100, pos=(-250, 0), wrapWidth=500, color='black')
-        self.quest_right = visual.TextStim(self.window, text='?', height=100, pos=(250, 0), wrapWidth=500, color='black')
+        self.quest_left = visual.TextStim(self.window, text='?', height=250, pos=(-250, 0), wrapWidth=500, color='black')
+        self.quest_right = visual.TextStim(self.window, text='?', height=250, pos=(250, 0), wrapWidth=500, color='black')
         self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), wrapWidth=200, color='white')
 
         self.present_left = None
