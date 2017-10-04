@@ -34,14 +34,14 @@ class fixation_cross(object):
         self.window = window
 
         # i dont know how to draw a fixation cross
-        self.line = visual.ShapeStim(self.window , name='verticle line', 
-            lineColor=None, fillColor=color, 
+        self.line = visual.ShapeStim(self.window , name='verticle line',
+            lineColor=None, fillColor=color,
             vertices=[(-2.5, 250), (-2.5,-250), (2.5,-250), (2.5, 250)])
 
-        self.dash = visual.ShapeStim(self.window , name='dash line', 
-            lineColor=None, fillColor=color, 
+        self.dash = visual.ShapeStim(self.window , name='dash line',
+            lineColor=None, fillColor=color,
             vertices=[(-10, 2.5), (-10, -2.5), (10,-2.5), (10, 2.5)])
-        
+
     def set_trial(self, trial):
         self.duration = trial['fixT']
         self.line.fillColor = 'black'
@@ -57,7 +57,7 @@ class fixation_cross(object):
 
 class Text(object):
     '''
-    show text in the middle of the screen 
+    show text in the middle of the screen
     such as 'switch'
     '''
     def __init__(self, window, text, color):
@@ -72,7 +72,7 @@ class Text(object):
         constructor.
         '''
         self.window = window
-        self.text = visual.TextStim(self.window, text=text, height=34, wrapWidth=1100, color=color)
+        self.text = visual.TextStim(self.window, text=text, height=34, wrapWidth=1100, color=color, font=sans)
         self.duration = None
 
     def set_trial(self, trial):
@@ -98,21 +98,20 @@ class responsescreen(object):
     '''
     def __init__(self, window):
         self.window = window
-        self.line = visual.ShapeStim(self.window , name='verticle line', 
-                        lineColor=None, fillColor='black', 
+        self.line = visual.ShapeStim(self.window , name='verticle line',
+                        lineColor=None, fillColor='black',
                         vertices=[(-2.5, 250), (-2.5,-250), (2.5,-250), (2.5,250)])
 
-        self.dash = visual.ShapeStim(self.window , name='dash line', 
+        self.dash = visual.ShapeStim(self.window , name='dash line',
                         lineColor=None, fillColor='black',
                         vertices=[(-10, 2.5), (-10, -2.5), (10,-2.5), (10, 2.5)])
 
         self.image_left = visual.ImageStim(self.window, name='stimPic-left', image=None, size=(250, 250), pos=(-250, 0))
         self.image_right = visual.ImageStim(self.window, name='stimPic-right', image=None, size=(250, 250), pos=(250, 0))
         self.image_mid = visual.ImageStim(self.window, name='stimPic-middle', image=None, size=(100, 100),pos=(0,0))
-
-        self.quest_left = visual.TextStim(self.window, text='?', height=300, pos=(-250, 0), color='black')
-        self.quest_right = visual.TextStim(self.window, text='?', height=300, pos=(250, 0), color='black')
-        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), color='black')
+        self.quest_left = visual.TextStim(self.window, text='?', height=250, pos=(-250, 0), wrapWidth=500, color='black')
+        self.quest_right = visual.TextStim(self.window, text='?', height=250, pos=(250, 0), wrapWidth=500, color='black')
+        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), wrapWidth=200, color='white')
 
         self.present_left = None
         self.present_right = None
@@ -122,25 +121,25 @@ class responsescreen(object):
         self.duration = trial['stimT']
         self.ans = trial['Ans']
         # change color of self.line and self.dash base in trial['Condition']
-	if 'NoGo'in trial['TrialType']:
+        if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
-	elif 'Recog' in trial['TrialType']:
+        elif 'Recog' in trial['TrialType']:
             self.line.fillColor = 'red'
             self.dash.fillColor = 'red'
         elif 'Back' in trial['TrialType']:
             self.line.fillColor = 'blue'
             self.dash.fillColor = 'blue'
-        
-        if trial['stimPicLeft'] is '?':
+
+        if '?' == trial['stimPicLeft']:
             # change color of self.quest_left, self.quest_right and self.dash base in trial['Condition']
             self.present_left = self.quest_left
             self.present_right = self.quest_right
         else:
-            self.image_left.setImage(trial['stimPicLeft']) 
+            self.image_left.setImage(trial['stimPicLeft'])
             self.image_right.setImage(trial['stimPicRight'])
-        self.present_left = self.image_left
-        self.present_right = self.image_right
+            self.present_left = self.image_left
+            self.present_right = self.image_right
 
         if trial['stimPicMid'] is '?':
             self.present_mid = self.quest_mid
@@ -148,12 +147,12 @@ class responsescreen(object):
         elif trial['stimPicMid'] is None:
             self.present_mid = self.dash
 
-        else: 
-            self.image_mid.setImage(trial['stimPicMid']) 
+        else:
+            self.image_mid.setImage(trial['stimPicMid'])
             self.present_mid = self.image_mid
 
     def show(self, clock):
-        event.clearEvents() 
+        event.clearEvents()
 
         correct = None
         respRT = np.nan
@@ -210,12 +209,12 @@ def get_keyboard(timer, respkeylist):
             quitEXP(True)
         else:
             KeyResp, KeyPressTime = key, time
-    
+
     return KeyResp, KeyPressTime
 
 def quitEXP(endExpNow):
     if endExpNow:
-        print 'user cancel'        
+        print 'user cancel'
         core.quit()
 
 def display_instructions(window, env, txt_color='black', skip=False):
@@ -223,13 +222,13 @@ def display_instructions(window, env, txt_color='black', skip=False):
     ready_txt = load_instruction(os.path.abspath('./instructions/wait_trigger.txt'))[0]
 
     instruction_stimuli = visual.TextStim(
-        window, text='default text', font=sans, 
+        window, text='default text', font=sans,
         name='instruction',
         pos=[-50,0], height=30, wrapWidth=1100,
         color=txt_color,
         ) #object to display instructions
 
-    #instructions screen 
+    #instructions screen
     if skip:
         pass
     else:
@@ -241,17 +240,17 @@ def display_instructions(window, env, txt_color='black', skip=False):
                 core.wait(uniform(1.3,1.75))
             else:
                 event.waitKeys(keyList=['return'])
-    
+
     instruction_stimuli.setText(ready_txt)
     instruction_stimuli.draw()
     window.flip()
-    
+
     if env == 'lab':
         core.wait(uniform(1.3,1.75))
     else:
         pass
         #need to update a fmri version (setting dev and mri)
-        
+
 
 def subject_info(experiment_info):
     '''
@@ -263,7 +262,7 @@ def subject_info(experiment_info):
 
     experiment_info['Date'] = data.getDateStr()
 
-    file_root = ('_').join([experiment_info['Subject'], experiment_info['Session'], 
+    file_root = ('_').join([experiment_info['Subject'], experiment_info['Session'],
                             experiment_info['Experiment'], experiment_info['Date']])
     experiment_info['DataFile'] = 'data' + os.path.sep + file_root + '.csv'
     experiment_info['LogFile'] = 'data' + os.path.sep + file_root + '.log'
@@ -288,10 +287,10 @@ def get_stim_screen(trial, switch_screen, stimulus_screen):
     '''
     trial: dict
         the current trial
-    
+
     switch_screen: obj
         switch screen object
-        
+
     stimulus_screen: obj
         stimulus screen object
     '''
