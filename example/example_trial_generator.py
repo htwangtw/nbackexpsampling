@@ -7,19 +7,15 @@ set working directory to the task folder before runing this example
 
 H.T. Wang
 '''
-import os, sys
-# add the source code folder to the system so this example can run
-sys.path.append('./src')
 # example 1: build your own
 from fileIO import write_csv, create_headers
-from datastructure.stimulus import stimulus_twofeat
-from datastructure.experiment import *
-from datastructure import trialtype
+from src.datastructure.stimulus import stimulus_onefeat
+from src.datastructure.datastructure import *
+from src.datastructure import trialtype
 
 
 # set the two features we used for making the stimulus
 shape = ['square', 'triangle', 'circle']
-texture = ['dot', 'solid', 'stripe']
 
 # locate path of experiment specification related files
 condition_path = './parameters/ConditionsSpecifications.csv'
@@ -40,18 +36,18 @@ parameters.load_header(trialheader_path)
 find_trial = trial_finder(trialspec_path=trialspec_path, trialspec_col=trialspec_col)
 
 # create stimulus generators
-stimulus_generator = stimulus_twofeat(feature1=shape, feature2=texture)
-
+stimulus_generator = stimulus_onefeat(feature=shape)
+block = '0'
 # now build the trials
 builder = trial_builder()
 # build the trial generator
-trial_generator = builder.build(parameters, find_trial, stimulus_generator)
+trial_generator = builder.build(parameters, find_trial, stimulus_generator, block)
 # use it like this  - it's a list of dictionaries
 # I would just use these to save participant's output
 trials = next(trial_generator)
 
 
-# expamlpe 2: you can also import a wrap-around function for the above procedure 
+# expamlpe 2: you can also import a wrap-around function for the above procedure
 # or modify the parameters in the wraparound to make as above
 
 from settings import get_trial_generator
@@ -63,18 +59,13 @@ trials = next(trial_generator)
 for trial in trials:
     # to save information, for example, kepress for the response
     # first, find the appropriate column name in './Stimuli/TrialHeaders.csv'
-    # and the save information 
+    # and the save information
     # >> trial['keyResp'] = 'left'
     #
-    # dictionary csv writer is way better than the normal text write 
+    # dictionary csv writer is way better than the normal text write
     # when storing experiment data
-    # 
+    #
     # the stimulus is saved as a tuple in the dictionar, use tup2str function in module stimulus
     # uncomment the following lines to compare theout put
     #
-    from src.trialstructure.stimulus import tup2str
-    for key in trial.keys():
-        if type(trial[key]) is tuple:
-            trial[key] = tup2str(stimulus_dir, trial[key], '.png')
-
-    write_csv(fileName='./output/example_run2.csv', list_headers=parameters.headers, thisTrial=trial)
+     write_csv(fileName='~/example_run2.csv', list_headers=parameters.headers, thisTrial=trial)

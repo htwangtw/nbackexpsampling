@@ -14,8 +14,8 @@ When an event occurs in a 1-back block, the screen displays a pair of "?" and a 
 You answer according to the PREVIOUS screen.
 
 There are two type of events, a location event and a recognition event. 
-If the line is {COLOUR_1}, the trial is a Location event - please indicate the location of the target; 
-If the line is {COLOUR_2}, the trial is a Recognition event - please indicate weather the target is/was presented.
+If the line is {COLOUR_0}, the trial is a Recognition event - please indicate weather the target is/was presented;
+If the line is {COLOUR_1}, the trial is a Location event - please indicate the location of the target.
 
 In the Location trial, the left arrow button indicates LEFT, the right arrow button indicates RIGHT.
 In the Recognition trial, the left arrow button indicates YES, the right arrow button indicates NO.

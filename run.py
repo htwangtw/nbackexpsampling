@@ -14,18 +14,23 @@ from src.experiment import *
 from src.fileIO import read_conly, write_csv
 
 INFO = {
-    'Experiment' : 'mindwandering_msc', # compulsory 
-    'Subject': 'R0001_001', # compulsory 
-    'Session': '1', # compulsory 
-    } 
+    'Experiment' : 'mindwandering_msc', # compulsory
+    'Subject': 'R0001_001', # compulsory
+    'Session': '1', # compulsory
+    'Version': ['A', 'B'], # counterbalance the fixation cross
+    'N-back': ['0', '1'], # start the task with 1-back or 0-back
+    'Environment': ['lab', 'mri']
+    }
 
-# set up enviroment variables and generators
-settings = get_settings(env='lab', test=True) # set to False when collecting participant
-
-trial_generator, headers =  get_trial_generator()
 
 # collect participant info
 experiment_info = subject_info(INFO)
+
+# set up enviroment variables and generators
+# set test to False when collecting participant
+settings = get_settings(env=INFO['Environment'], test=True)
+
+trial_generator, headers =  get_trial_generator(INFO['N-back'])
 
 # skip instruction expect run 1
 if experiment_info['Session'] == '1':
@@ -48,12 +53,13 @@ if __name__ == "__main__":
     # hide mouse
     event.Mouse(visible=False)
 
-    # put instruction on screen 
-    display_instructions(window=Experiment.window, env=settings['env'], skip=skip_instruction)
+    # put instruction on screen
+    color = display_instructions(window=Experiment.window, env=settings['env'],
+            ver=INFO['Version'], skip=skip_instruction)
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
-    stimulus = responsescreen(window=Experiment.window)
+    stimulus = responsescreen(window=Experiment.window, color=color)
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = Text(window=Experiment.window, text=endtxt, color='black')
@@ -68,12 +74,12 @@ if __name__ == "__main__":
         # parse tuples to proper file names
         trial = parse_stimulus_name(trial)
         # prepare fixation cross and stimulus display
-        fixation.set_trial(trial)       
+        fixation.set_trial(trial)
         stim = get_stim_screen(trial, switch, stimulus)
-
-        # show fixation 
+        print(trial['TrialType'])
+        # show fixation
         fix_t = fixation.show(timer)
-        
+
         # show stimulus screen and catch response
         stim_t, KeyResp, KeyPressTime, respRT, correct = stim.show(timer)
         # post response fixation
@@ -94,10 +100,10 @@ if __name__ == "__main__":
         write_csv(experiment_info['DataFile'], headers, trial)
 
         #clear answers
-        KeyResp = None  
+        KeyResp = None
         correct = None
         respRT = None
-    
+
     # ending message
     end_msg.duration = 2
     end_msg.show(timer)

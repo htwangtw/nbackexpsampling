@@ -96,7 +96,7 @@ class responsescreen(object):
     '''
     the screen for the memory task
     '''
-    def __init__(self, window):
+    def __init__(self, window, color):
         self.window = window
         self.line = visual.ShapeStim(self.window , name='verticle line',
                         lineColor=None, fillColor='black',
@@ -106,33 +106,41 @@ class responsescreen(object):
                         lineColor=None, fillColor='black',
                         vertices=[(-10, 2.5), (-10, -2.5), (10,-2.5), (10, 2.5)])
 
-        self.image_left = visual.ImageStim(self.window, name='stimPic-left', image=None, size=(250, 250), pos=(-250, 0))
-        self.image_right = visual.ImageStim(self.window, name='stimPic-right', image=None, size=(250, 250), pos=(250, 0))
-        self.image_mid = visual.ImageStim(self.window, name='stimPic-middle', image=None, size=(100, 100),pos=(0,0))
-        self.quest_left = visual.TextStim(self.window, text='?', height=250, pos=(-250, 0), wrapWidth=500, color='black')
-        self.quest_right = visual.TextStim(self.window, text='?', height=250, pos=(250, 0), wrapWidth=500, color='black')
-        self.quest_mid = visual.TextStim(self.window, text='?', height=100,pos=(0,0), wrapWidth=200, color='white')
+        self.image_left = visual.ImageStim(self.window, name='stimPic-left',
+                image=None, size=(250, 250), pos=(-250, 0))
+        self.image_right = visual.ImageStim(self.window, name='stimPic-right',
+                image=None, size=(250, 250), pos=(250, 0))
+        self.image_mid = visual.ImageStim(self.window, name='stimPic-middle',
+                image=None, size=(100, 100),pos=(0,0))
+
+        self.quest_left = visual.TextStim(self.window, text='?',
+                height=250, pos=(-250, 0), wrapWidth=500, color='black')
+        self.quest_right = visual.TextStim(self.window, text='?',
+                height=250, pos=(250, 0), wrapWidth=500, color='black')
+        self.quest_mid = visual.TextStim(self.window, text='?',
+                height=100,pos=(0,0), wrapWidth=200, color='white')
 
         self.present_left = None
         self.present_right = None
         self.present_mid = None
 
+        self.color = color
+
     def set_trial(self, trial):
         self.duration = trial['stimT']
         self.ans = trial['Ans']
-        # change color of self.line and self.dash base in trial['Condition']
+        # change color of self.line and self.dash base on go trial task
         if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
         elif 'Recog' in trial['TrialType']:
-            self.line.fillColor = 'red'
-            self.dash.fillColor = 'red'
+            self.line.fillColor = self.color[0]
+            self.dash.fillColor = self.color[0]
         elif 'Back' in trial['TrialType']:
-            self.line.fillColor = 'blue'
-            self.dash.fillColor = 'blue'
+            self.line.fillColor = self.color[1]
+            self.dash.fillColor = self.color[1]
 
         if '?' == trial['stimPicLeft']:
-            # change color of self.quest_left, self.quest_right and self.dash base in trial['Condition']
             self.present_left = self.quest_left
             self.present_right = self.quest_right
         else:
@@ -217,18 +225,29 @@ def quitEXP(endExpNow):
         print 'user cancel'
         core.quit()
 
-def display_instructions(window, env, txt_color='black', skip=False):
+def display_instructions(window, env, ver, txt_color='black', skip=False):
+    def _instruction_ver(ver, text):
+        # change instruction according to ver
+        # ver A: blue for recognition; red for location
+        # ver B: red for recognition; blue for location
+        if ver is 'A':
+            color = ['blue', 'red']
+        else:
+            color = ['red', 'blue']
+        text = text.replace('{COLOUR_0}', color[0].upper()) # recognition
+        text  = text.replace('{COLOUR_1}', color[1].upper())# location
+        return color, text
+
     instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
     ready_txt = load_instruction(os.path.abspath('./instructions/wait_trigger.txt'))[0]
-
     instruction_stimuli = visual.TextStim(
         window, text='default text', font=sans,
         name='instruction',
         pos=[-50,0], height=30, wrapWidth=1100,
         color=txt_color,
         ) #object to display instructions
-
-    #instructions screen
+    color, instruction_txt[1] = _instruction_ver(ver, instruction_txt[1])
+        #instructions screen
     if skip:
         pass
     else:
@@ -239,6 +258,7 @@ def display_instructions(window, env, txt_color='black', skip=False):
             if i==0:
                 core.wait(uniform(1.3,1.75))
             else:
+                # need a self-pace version for MR
                 event.waitKeys(keyList=['return'])
 
     instruction_stimuli.setText(ready_txt)
@@ -250,7 +270,7 @@ def display_instructions(window, env, txt_color='black', skip=False):
     else:
         pass
         #need to update a fmri version (setting dev and mri)
-
+    return color
 
 def subject_info(experiment_info):
     '''

@@ -17,6 +17,16 @@ stimulus_dir = './stimuli/'
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
 
+# YNiC fMRI trigger related information
+from sys import platform
+if platform == 'linux2':
+    # in house script ynicstim location
+    YNICSTIM = '/groups/stimpc/ynicstim'
+    SERIAL_PORT = '/dev/ttyS0'
+else:
+    YNICSTIM = 'M:/stimpc/ynicstim'
+    SERIAL_PORT = 'COM1'
+TRIG_PORT = '/dev/parport0'
 
 from psychopy import logging
 from src.fileIO import write_csv, create_headers
@@ -25,7 +35,7 @@ from src.datastructure.datastructure import *
 from src.datastructure import trialtype
 
 # Base settings that apply to all environments.
-# These settings can be overwritten by any of the 
+# These settings can be overwritten by any of the
 # environment settings.
 
 BASE = {
@@ -52,8 +62,8 @@ PRODUCTION = {
 LAB = {
     'env': 'lab',  # Enviroment name
     'window_size': 'full_screen',
-    'button_box': None,  # No button box
-}
+    'input_method': 'keyboard'
+    }
 
 
 
@@ -76,23 +86,14 @@ LAB = {
 #                                         Very Positive",
 # }
 
-# MRI = {
-#     'env': 'mri',
-#     'window_size': "full_screen",
-#     # ButtonBox settings
-#     'button_box_port': 1,
-#     'button_box_rate': 19200,
-#     # Button box key mappings
-#     'left_key': "2",
-#     'right_key': '1',
-#     # Address for Biopac output
-#     'biopac_out': 0x3010,
-#     # TTL input address
-#     'ttl_in': 0x3011,
-# }
+MRI = {
+    'env': 'mri',
+    'window_size': 'full_screen',
+    'input_method': 'serial'
+}
 
 
-def get_trial_generator():
+def get_trial_generator(block):
     '''
     return a trial generator and a list of data log headers
     '''
@@ -111,14 +112,14 @@ def get_trial_generator():
     # now build the trials
     builder = trial_builder()
     # build the trial generator
-    trial_generator = builder.build(parameters, find_trial, stimulus_generator)
+    trial_generator = builder.build(parameters, find_trial, stimulus_generator, block)
 
     return trial_generator, parameters.headers
 
 
 def get_settings(env, test=False):
-    '''Return a dictionary of settings based on 
-    the specified environment, given by the parameter 
+    '''Return a dictionary of settings based on
+    the specified environment, given by the parameter
     env. Can also specify whether or not to use testing settings.
     '''
     # Start with the base settings
@@ -128,13 +129,13 @@ def get_settings(env, test=False):
         settings.update(LAB)
     # elif env == 'dev':
     #     settings.update(DEV)
-    # elif env == 'mri':
-    #     settings.update(MRI)
+    elif env == 'mri':
+        settings.update(MRI)
     else:
         raise ValueError, 'Environment "{0}" not supported.'.format(env)
 
     # Update it with either the test or production settings
-    
+
     if test:
         settings.update(TEST)
     else:
