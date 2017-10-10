@@ -226,9 +226,9 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
             color = ['red', 'blue']
         else:
             color = ['blue', 'red']
-        cur  = cur.replace('{COLOUR_1}', color[0].upper())
-        cur  = cur.replace('{COLOUR_2}', color[1].upper())
-        return color
+        text = text.replace('{COLOUR_1}', color[0].upper())
+        text  = text.replace('{COLOUR_2}', color[1].upper())
+        return color, text
 
     instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
     ready_txt = load_instruction(os.path.abspath('./instructions/wait_trigger.txt'))[0]
@@ -238,7 +238,7 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
         pos=[-50,0], height=30, wrapWidth=1100,
         color=txt_color,
         ) #object to display instructions
-    color = _instruction_ver(ver, instruction_txt[1])
+    color, instruction_txt[1] = _instruction_ver(ver, instruction_txt[1])
         #instructions screen
     if skip:
         pass
