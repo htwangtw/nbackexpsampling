@@ -22,14 +22,15 @@ INFO = {
     'Environment': ['lab', 'mri']
     }
 
+
+# collect participant info
+experiment_info = subject_info(INFO)
+
 # set up enviroment variables and generators
 # set test to False when collecting participant
 settings = get_settings(env=INFO['Environment'], test=True)
 
 trial_generator, headers =  get_trial_generator(INFO['N-back'])
-
-# collect participant info
-experiment_info = subject_info(INFO)
 
 # skip instruction expect run 1
 if experiment_info['Session'] == '1':

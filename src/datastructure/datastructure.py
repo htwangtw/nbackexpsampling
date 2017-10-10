@@ -7,7 +7,6 @@ To do: change the current 2-back setting to n-back
 import codecs
 import csv
 from random import randrange, shuffle, randint
-from collections import OrderedDict
 
 from . import trialtype
 from .trialtype import *
@@ -159,13 +158,13 @@ class trial_builder(object):
         return
             condition, shuffled: lst
         '''
-	    if block == '1':
+        if block == '1':
             # use Ordereddict form python in-built library `collections`
-            conditions = OrderedDict(sorted(conditions.items(), reverse=False,
-                key=lambda t: t[0]))
+            conditions = sorted(conditions, 
+            reverse=False, key=lambda t: t['Condition'])
         elif block == '0':
-            conditions = OrderedDict(sorted(conditions.items(), reverse=True,
-                key=lambda t: t[0]))
+            conditions = sorted(conditions, 
+            reverse=True, key=lambda t: t['Condition'])
         else:
             shuffle(conditons)
         return conditions
