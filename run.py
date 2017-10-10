@@ -14,17 +14,19 @@ from src.experiment import *
 from src.fileIO import read_conly, write_csv
 
 INFO = {
-    'Experiment' : 'mindwandering_msc', # compulsory 
-    'Subject': 'R0001_001', # compulsory 
+    'Experiment' : 'mindwandering_msc', # compulsory
+    'Subject': 'R0001_001', # compulsory
     'Session': '1', # compulsory
-    'version': ['A', 'B'], # counterbalance the fixation cross
-    'n-back': ['0', '1'], # start the task with 1-back or 0-back
-    } 
+    'Version': ['A', 'B'], # counterbalance the fixation cross
+    'N-back': ['0', '1'], # start the task with 1-back or 0-back
+    'Environment': ['lab', 'mri']
+    }
 
 # set up enviroment variables and generators
-settings = get_settings(env='lab', test=True) # set to False when collecting participant
+# set test to False when collecting participant
+settings = get_settings(env=INFO['Environment'], test=True)
 
-trial_generator, headers =  get_trial_generator()
+trial_generator, headers =  get_trial_generator(INFO['N-back'])
 
 # collect participant info
 experiment_info = subject_info(INFO)
@@ -50,7 +52,7 @@ if __name__ == "__main__":
     # hide mouse
     event.Mouse(visible=False)
 
-    # put instruction on screen 
+    # put instruction on screen
     display_instructions(window=Experiment.window, env=settings['env'], skip=skip_instruction)
 
     # create display screens
@@ -70,12 +72,12 @@ if __name__ == "__main__":
         # parse tuples to proper file names
         trial = parse_stimulus_name(trial)
         # prepare fixation cross and stimulus display
-        fixation.set_trial(trial)       
+        fixation.set_trial(trial)
         stim = get_stim_screen(trial, switch, stimulus)
 
-        # show fixation 
+        # show fixation
         fix_t = fixation.show(timer)
-        
+
         # show stimulus screen and catch response
         stim_t, KeyResp, KeyPressTime, respRT, correct = stim.show(timer)
         # post response fixation
@@ -96,10 +98,10 @@ if __name__ == "__main__":
         write_csv(experiment_info['DataFile'], headers, trial)
 
         #clear answers
-        KeyResp = None  
+        KeyResp = None
         correct = None
         respRT = None
-    
+
     # ending message
     end_msg.duration = 2
     end_msg.show(timer)

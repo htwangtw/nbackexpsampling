@@ -7,6 +7,7 @@ To do: change the current 2-back setting to n-back
 import codecs
 import csv
 from random import randrange, shuffle, randint
+from collections import OrderedDict
 
 from . import trialtype
 from .trialtype import *
@@ -26,7 +27,7 @@ class experiment_parameters(object):
         the number of catch trials (of any kind) in a block
 
         default as 6
-    
+
     runs: int
         the number of time to go through a set of conditions
 
@@ -38,22 +39,22 @@ class experiment_parameters(object):
         self.conditions = []
         self.headers = None
         self.runs = runs
-    
+
     def create_counter(self):
         '''
         create a counter in seconds
         '''
         return self.block_length * 60
-    
+
     def load_conditions(self, condition_path):
         '''
-        
+
         load all the conditions for building a block
 
         condition_path
             path to the condition file
         '''
-        
+
         conditions, _ = load_conditions_dict(condition_path)
 
         # conditions = []
@@ -62,11 +63,11 @@ class experiment_parameters(object):
         #     for cond in reader:
         #         conditions.append(cond[0])
         self.conditions = conditions
-    
+
     def load_header(self, trialheader_path):
         _, header = load_conditions_dict(trialheader_path)
         self.headers = header
-   
+
 
 class trial_finder(object):
     '''
@@ -111,15 +112,15 @@ class trial_finder(object):
 class trial_builder(object):
     '''
     build trials for each run
-    need these - 
+    need these -
         experiment_parameters: obj
             store experiment parameter
-        
+
         trial_finder: obj
             it finds a trial generator for you
-        
+
         stimulus_generator: obj
-            it generate stimulus pair  
+            it generate stimulus pair
     '''
     def __init__(self):
         self.trial_index = 0
@@ -129,7 +130,7 @@ class trial_builder(object):
 
     def initialise(self, counter):
         '''
-        clean the buffer and reset counter 
+        clean the buffer and reset counter
 
         counter: int
             the legth of the block in second
@@ -142,22 +143,37 @@ class trial_builder(object):
     def set_block_sequence(self, conditions, block=None):
 
         '''
-        only support random sequence for now
+        support two types of block conditions for now
+        This module is so crap....
+
+        options: random sequence, starting from 1-back or 0-back
 
         conditions: list
             a list of conditions
+            the item in the list are csv file entry as dictionaries
+            the csv file entries should not use numbers (i.e.1 and 0)
+            otherwise the behaviour will not work as expected
 
+        block: None, '0', '1'
+            no sequence assigned, starting from 1 back, starting from 0 back
         return
             condition, shuffled: lst
         '''
-	if None:
-        	shuffle(conditions)
+	    if block == '1':
+            # use Ordereddict form python in-built library `collections`
+            conditions = OrderedDict(sorted(conditions.items(), reverse=False,
+                key=lambda t: t[0]))
+        elif block == '0':
+            conditions = OrderedDict(sorted(conditions.items(), reverse=True,
+                key=lambda t: t[0]))
+        else:
+            shuffle(conditons)
         return conditions
 
     def block_trials(self, trial_finder, block, trial_headers):
-        
+
         '''
-        trial_finder: object  
+        trial_finder: object
             it finds what type of trial you need based on a string
 
         block: str
@@ -165,8 +181,8 @@ class trial_builder(object):
 
         trial_headers: lst
             the trial headers
-        
-        return 
+
+        return
             objects
         '''
 
@@ -178,7 +194,7 @@ class trial_builder(object):
 
         trial_Go2 = trial_finder.get(trial_type=block['GoTrial_2'])
         trial_Go2.lst_header = trial_headers
-        
+
         trial_Go = [trial_Go1, trial_Go2]
 
         return trial_NoGo, trial_Go
@@ -190,10 +206,10 @@ class trial_builder(object):
         trial_NoGo: object
             the no-go trial object. only this object contains the information for this
 
-        retrun 
+        retrun
             int
         '''
-        
+
         n_min = int(trial_NoGo.trial_spec['trial_n_min'])
         n_max = int(trial_NoGo.trial_spec['trial_n_max']) + 1
 
@@ -205,7 +221,7 @@ class trial_builder(object):
 
         cur_trial: dict
             a trial in dictionary form
-        
+
         block: str
             the current block name
 
@@ -216,39 +232,43 @@ class trial_builder(object):
         self.dict_trials.append(cur_trial)
         self.last_trial = cur_trial
 
-    def build(self, experiment_parameters, trial_finder, stimulus_generator):
+    def build(self, experiment_parameters, trial_finder, stimulus_generator, block):
         '''
         now let's build the trial generator
 
         experiment_parameters: obj
             store experiment parameter
-        
+
         trial_finder: obj
             it finds a trial generator for you
-        
+
         stimulus_generator: obj
-            it generate stimulus pair   
+            it generate stimulus pair
+
+        block: string or None
+            indicate the task condiiton in the first block
+            Options are '0', '1', or None (random start)
 
         '''
         for cur in range(experiment_parameters.runs):
 
-            # shuffle the blocks
-            blocks = self.set_block_sequence(experiment_parameters.conditions)
+            # shuffle the blocks or start from 1-/0-back
+            blocks = self.set_block_sequence(experiment_parameters.conditions, block)
             # initialize the output storage and the counter
             run  = []
             counter = experiment_parameters.create_counter()
 
             for block in blocks:
-                
+
                 # initalize the block
                 self.dict_trials = []
                 self.counter = counter
                 self.last_trial = None # n-back
-                
+
                 # store the trial index here, if need to regenerate this block, load from here
                 self.init_trial_index = self.trial_index
 
-                # get the specific go trials according to the block you are in 
+                # get the specific go trials according to the block you are in
                 trial_NoGo, trial_Go = self.block_trials(trial_finder, block, experiment_parameters.headers)
 
                 while self.counter != 0: # start counting
@@ -273,12 +293,12 @@ class trial_builder(object):
                         cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
                         self.counter -= t
                         self.save_trial(cur_trial, block['Condition'])
-                    
+
                     cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
                     cur_trial['TrialType'] = 'Switch'
                     cur_trial['stimPicMid'] = 'SWITCH'
-                    cur_trial['stimPicLeft'] = None 
-                    cur_trial['stimPicRight'] = None 
+                    cur_trial['stimPicLeft'] = None
+                    cur_trial['stimPicRight'] = None
 
                     self.save_trial(cur_trial, block)
 
@@ -287,13 +307,13 @@ class trial_builder(object):
                         self.initialise(counter)
 
                     else:
-                        # if it's good save this block to the run 
+                        # if it's good save this block to the run
                         print 'save this block'
                         run += self.dict_trials
             yield run
 
 
-                
+
 def str2float(string):
     '''
     detect if the string can be converted to float.
