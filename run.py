@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
-    stimulus = responsescreen(window=Experiment.window)
+    stimulus = responsescreen(window=Experiment.window, color=color)
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = Text(window=Experiment.window, text=endtxt, color='black')
