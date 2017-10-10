@@ -16,7 +16,9 @@ from src.fileIO import read_conly, write_csv
 INFO = {
     'Experiment' : 'mindwandering_msc', # compulsory 
     'Subject': 'R0001_001', # compulsory 
-    'Session': '1', # compulsory 
+    'Session': '1', # compulsory
+    'version': ['A', 'B'], # counterbalance the fixation cross
+    'n-back': ['0', '1'], # start the task with 1-back or 0-back
     } 
 
 # set up enviroment variables and generators

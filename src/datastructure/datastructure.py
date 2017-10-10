@@ -139,7 +139,7 @@ class trial_builder(object):
         self.last_trial = None
         self.trial_index = self.init_trial_index
 
-    def set_block_sequence(self, conditions):
+    def set_block_sequence(self, conditions, block=None):
 
         '''
         only support random sequence for now
@@ -150,8 +150,8 @@ class trial_builder(object):
         return
             condition, shuffled: lst
         '''
-
-        shuffle(conditions)
+	if None:
+        	shuffle(conditions)
         return conditions
 
     def block_trials(self, trial_finder, block, trial_headers):
