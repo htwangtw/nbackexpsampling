@@ -76,7 +76,7 @@ if __name__ == "__main__":
         # prepare fixation cross and stimulus display
         fixation.set_trial(trial)
         stim = get_stim_screen(trial, switch, stimulus)
-
+        print(trial['TrialType'])
         # show fixation
         fix_t = fixation.show(timer)
 

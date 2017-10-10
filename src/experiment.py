@@ -133,10 +133,10 @@ class responsescreen(object):
         if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
-        elif 'Back' in trial['TrialType']:
+        elif 'Recog' in trial['TrialType']:
             self.line.fillColor = self.color[0]
             self.dash.fillColor = self.color[0]
-        elif 'Recog' in trial['TrialType']:
+        elif 'Back' in trial['TrialType']:
             self.line.fillColor = self.color[1]
             self.dash.fillColor = self.color[1]
 
@@ -228,14 +228,14 @@ def quitEXP(endExpNow):
 def display_instructions(window, env, ver, txt_color='black', skip=False):
     def _instruction_ver(ver, text):
         # change instruction according to ver
-        # ver A: red for location; blue for recognition
+        # ver A: blue for recognition; red for location
         # ver B: red for recognition; blue for location
         if ver is 'A':
-            color = ['red', 'blue']
-        else:
             color = ['blue', 'red']
-        text = text.replace('{COLOUR_1}', color[0].upper()) # location
-        text  = text.replace('{COLOUR_2}', color[1].upper())# recognition
+        else:
+            color = ['red', 'blue']
+        text = text.replace('{COLOUR_0}', color[0].upper()) # recognition
+        text  = text.replace('{COLOUR_1}', color[1].upper())# location
         return color, text
 
     instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
