@@ -54,7 +54,8 @@ if __name__ == "__main__":
     event.Mouse(visible=False)
 
     # put instruction on screen
-    display_instructions(window=Experiment.window, env=settings['env'], skip=skip_instruction)
+    color = display_instructions(window=Experiment.window, env=settings['env'],
+            ver=INFO['Version'], skip=skip_instruction)
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')

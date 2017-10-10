@@ -217,18 +217,29 @@ def quitEXP(endExpNow):
         print 'user cancel'
         core.quit()
 
-def display_instructions(window, env, txt_color='black', skip=False):
+def display_instructions(window, env, ver, txt_color='black', skip=False):
+    def _instruction_ver(ver, text):
+        # change instruction according to ver
+        # ver A: red for location; blue for recognition
+        # ver B: red for recognition; blue for location
+        if ver is 'A':
+            color = ['red', 'blue']
+        else:
+            color = ['blue', 'red']
+        cur  = cur.replace('{COLOUR_1}', color[0].upper())
+        cur  = cur.replace('{COLOUR_2}', color[1].upper())
+        return color
+
     instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
     ready_txt = load_instruction(os.path.abspath('./instructions/wait_trigger.txt'))[0]
-
     instruction_stimuli = visual.TextStim(
         window, text='default text', font=sans,
         name='instruction',
         pos=[-50,0], height=30, wrapWidth=1100,
         color=txt_color,
         ) #object to display instructions
-
-    #instructions screen
+    color = _instruction_ver(ver, instruction_txt[1])
+        #instructions screen
     if skip:
         pass
     else:
@@ -239,6 +250,7 @@ def display_instructions(window, env, txt_color='black', skip=False):
             if i==0:
                 core.wait(uniform(1.3,1.75))
             else:
+                # need a self-pace version for MR
                 event.waitKeys(keyList=['return'])
 
     instruction_stimuli.setText(ready_txt)
@@ -250,7 +262,7 @@ def display_instructions(window, env, txt_color='black', skip=False):
     else:
         pass
         #need to update a fmri version (setting dev and mri)
-
+    return color
 
 def subject_info(experiment_info):
     '''
