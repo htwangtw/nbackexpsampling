@@ -8,7 +8,7 @@ set working directory to the task folder before runing this example
 H.T. Wang
 '''
 # example 1: build your own
-from fileIO import write_csv, create_headers
+from src.fileIO import write_csv, create_headers
 from src.datastructure.stimulus import stimulus_onefeat
 from src.datastructure.datastructure import *
 from src.datastructure import trialtype
@@ -25,10 +25,12 @@ stimulus_dir = './stimuli/'
 
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
+block = '0'
 
 # now define the generators
 # create experiment parameters
-parameters = experiment_parameters(block_length=1.5, block_catch_n=6, runs=1)
+# a 1.5 min block can have 6 catch trials max
+parameters = experiment_parameters(block_length=4.5, block_go_n=18, runs=1)
 parameters.load_conditions(condition_path)
 parameters.load_header(trialheader_path)
 
@@ -37,7 +39,6 @@ find_trial = trial_finder(trialspec_path=trialspec_path, trialspec_col=trialspec
 
 # create stimulus generators
 stimulus_generator = stimulus_onefeat(feature=shape)
-block = '0'
 # now build the trials
 builder = trial_builder()
 # build the trial generator
@@ -50,10 +51,10 @@ trials = next(trial_generator)
 # expamlpe 2: you can also import a wrap-around function for the above procedure
 # or modify the parameters in the wraparound to make as above
 
-from settings import get_trial_generator
+# from settings import get_trial_generator
 # build the trial generator and gaet the trials
-trial_generator =  get_trial_generator()
-trials = next(trial_generator)
+# trial_generator =  get_trial_generator()
+# trials = next(trial_generator)
 
 # save it out; you can start from here to build an experiment
 for trial in trials:
@@ -68,4 +69,4 @@ for trial in trials:
     # the stimulus is saved as a tuple in the dictionar, use tup2str function in module stimulus
     # uncomment the following lines to compare theout put
     #
-     write_csv(fileName='~/example_run2.csv', list_headers=parameters.headers, thisTrial=trial)
+     write_csv(fileName='../example_run2.csv', list_headers=parameters.headers, thisTrial=trial)

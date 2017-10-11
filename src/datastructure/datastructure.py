@@ -6,7 +6,7 @@ To do: change the current 2-back setting to n-back
 
 import codecs
 import csv
-from random import randrange, shuffle, randint
+from random import randrange, shuffle, randint, choice
 
 from . import trialtype
 from .trialtype import *
@@ -18,32 +18,26 @@ class experiment_parameters(object):
     save basic parameter, late pass to trial_builder
 
     block_length: float
-        the length of a condition block
+        the length of a condition block, must be 1.5 * n
 
         default as 1.5 minutes
 
-    block_catch_n: int
+    block_go_n: int
         the number of catch trials (of any kind) in a block
-
+        must be 6 * n
         default as 6
 
     runs: int
         the number of time to go through a set of conditions
 
     '''
-    def __init__(self, block_length=1.5, block_catch_n=6, runs=1):
+    def __init__(self, block_length=1.5, block_go_n=6, runs=1):
         self.block_length = block_length
-        self.block_catch_n = block_catch_n
+        self.block_go_n = block_go_n
         self.blocks = []
         self.conditions = []
         self.headers = None
         self.runs = runs
-
-    def create_counter(self):
-        '''
-        create a counter in seconds
-        '''
-        return self.block_length * 60
 
     def load_conditions(self, condition_path):
         '''
@@ -66,6 +60,17 @@ class experiment_parameters(object):
     def load_header(self, trialheader_path):
         _, header = load_conditions_dict(trialheader_path)
         self.headers = header
+
+    def create_counter(self):
+        '''
+        create:
+        a counter in seconds for task length
+        a list of counters for the number of catch trial type 1 to n
+       '''
+        time = self.block_length * 60
+        trialtype_n = len(self.conditions[0]) - 1
+        go_n = [self.block_go_n / trialtype_n] * trialtype_n
+        return time, go_n
 
 
 class trial_finder(object):
@@ -127,15 +132,18 @@ class trial_builder(object):
         self.last_trial = None
         self.init_trial_index = 0
 
-    def initialise(self, counter):
+    def initialise(self, task_t, go_n):
         '''
         clean the buffer and reset counter
 
-        counter: int
+        task_t: float
             the legth of the block in second
+        go_n: list, int
+            a list of number of catch trials
         '''
         self.dict_trials = []
-        self.counter = counter
+        self.task_t = task_t
+        self.go_n = go_n
         self.last_trial = None
         self.trial_index = self.init_trial_index
 
@@ -160,10 +168,10 @@ class trial_builder(object):
         '''
         if block == '1':
             # use Ordereddict form python in-built library `collections`
-            conditions = sorted(conditions, 
+            conditions = sorted(conditions,
             reverse=False, key=lambda t: t['Condition'])
         elif block == '0':
-            conditions = sorted(conditions, 
+            conditions = sorted(conditions,
             reverse=True, key=lambda t: t['Condition'])
         else:
             shuffle(conditons)
@@ -255,45 +263,51 @@ class trial_builder(object):
             blocks = self.set_block_sequence(experiment_parameters.conditions, block)
             # initialize the output storage and the counter
             run  = []
-            counter = experiment_parameters.create_counter()
-
+            init_task_t, init_go_n = experiment_parameters.create_counter()
             for block in blocks:
-
-                # initalize the block
-                self.dict_trials = []
-                self.counter = counter
-                self.last_trial = None # n-back
-
-                # store the trial index here, if need to regenerate this block, load from here
-                self.init_trial_index = self.trial_index
+                self.initialise(init_task_t, [9, 9]) # HW- hard coding this for now
 
                 # get the specific go trials according to the block you are in
-                trial_NoGo, trial_Go = self.block_trials(trial_finder, block, experiment_parameters.headers)
+                trial_NoGo, trial_Go = self.block_trials(
+                        trial_finder, block, experiment_parameters.headers)
 
-                while self.counter != 0: # start counting
-                    for i in range(experiment_parameters.block_catch_n):
+                while self.task_t != 0: # start counting
+                    for i in range(experiment_parameters.block_go_n):
                         # get no-go trial number
                         n_NoGo = self.get_n_NoGo(trial_NoGo)
 
                         # genenrate the no-go trials before the go trial occur
                         for j in range(n_NoGo):
-                            cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
-                            self.counter -= t
+                            cur_trial, t = next(trial_NoGo.generate_trial(
+                                stimulus_generator=stimulus_generator,
+                                last_trial=self.last_trial))
+                            self.task_t -= t
                             self.save_trial(cur_trial, block['Condition'])
                         # generate the go trial
-                        # go trial: 1 feature or 2 feature?
-                        idx = randint(0, 1)
-                        cur_trial, t = next(trial_Go[idx].generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial)) # n-back
-                        self.counter -= t
+                        # go trial: type 1 or type 2
+                        # see which go trial type were all used
+                        use_go = [i for i, e in enumerate(self.go_n) if e > 0]
+                        if use_go:
+                            # select a random one from the avalible ones
+                            idx = choice(use_go)
+                        cur_trial, t = next(trial_Go[idx].generate_trial(
+                            stimulus_generator=stimulus_generator,
+                            last_trial=self.last_trial)) # n-back
+                        self.task_t -= t
+                        self.go_n[idx] -= 1
                         self.save_trial(cur_trial, block['Condition'])
 
                     # add 1~ 2 no-go trials and then a switch screen to end this block
                     for k in range(randrange(1, 3, 1)):
-                        cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
-                        self.counter -= t
+                        cur_trial, t = next(trial_NoGo.generate_trial(
+                                    stimulus_generator=stimulus_generator,
+                                    last_trial=self.last_trial))
+                        self.task_t -= t
                         self.save_trial(cur_trial, block['Condition'])
 
-                    cur_trial, t = next(trial_NoGo.generate_trial(stimulus_generator=stimulus_generator, last_trial=self.last_trial))
+                    cur_trial, t = next(trial_NoGo.generate_trial(
+                        stimulus_generator=stimulus_generator,
+                        last_trial=self.last_trial))
                     cur_trial['TrialType'] = 'Switch'
                     cur_trial['stimPicMid'] = 'SWITCH'
                     cur_trial['stimPicLeft'] = None
@@ -301,10 +315,9 @@ class trial_builder(object):
 
                     self.save_trial(cur_trial, block)
 
-                    if self.counter != 0:
+                    if self.task_t != 0:
                         # if this list of trials is not good for the block, restart
-                        self.initialise(counter)
-
+                        self.initialise(init_task_t, [9, 9])
                     else:
                         # if it's good save this block to the run
                         print 'save this block'
