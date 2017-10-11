@@ -260,17 +260,23 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
             else:
                 # need a self-pace version for MR
                 event.waitKeys(keyList=['return'])
-
+    # wait for trigger; or just wait
     instruction_stimuli.setText(ready_txt)
     instruction_stimuli.draw()
-    window.flip()
 
+    trig_collector = None
     if env == 'lab':
+        window.flip()
         core.wait(uniform(1.3,1.75))
-    else:
-        pass
-        #need to update a fmri version (setting dev and mri)
-    return color
+    elif env == 'mri':
+        from src.ynicmr import get_trig_collector, DUMMY_VOL
+        window.flip()
+        trig_collector = get_trig_collector()
+        trig_collector.start()
+        trig_collector.waitForVolume(DUMMY_VOL)
+    else: # not supported
+        raise Exception('Unknown environment setting')
+    return color, trig_collector
 
 def subject_info(experiment_info):
     '''
@@ -284,8 +290,12 @@ def subject_info(experiment_info):
 
     file_root = ('_').join([experiment_info['Subject'], experiment_info['Session'],
                             experiment_info['Experiment'], experiment_info['Date']])
+
     experiment_info['DataFile'] = 'data' + os.path.sep + file_root + '.csv'
     experiment_info['LogFile'] = 'data' + os.path.sep + file_root + '.log'
+
+    if experiment_info['Environment'] is 'mri':
+        experiment_info['MRIFile'] = 'data' + os.path.sep + file_root + '_voltime.csv'
 
     if infoDlg.OK:
         return experiment_info

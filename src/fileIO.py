@@ -37,13 +37,13 @@ def load_instruction(PATH):
     return a list
     '''
 
-    with codecs.open(PATH, 'r', encoding='utf8') as f: 
+    with codecs.open(PATH, 'r', encoding='utf8') as f:
         input_data = f.read()
 
     text = parse_instructions(input_data)
 
     return text
-    
+
 
 def load_conditions_dict(conditionfile):
     '''
@@ -57,7 +57,7 @@ def load_conditions_dict(conditionfile):
 
         for row in reader:
             trials.append(row)
-        
+
         # save field names as a list in order
         fieldnames = reader.fieldnames
 

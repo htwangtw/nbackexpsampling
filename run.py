@@ -12,6 +12,7 @@ from psychopy import core, event, logging, visual
 from settings import *
 from src.experiment import *
 from src.fileIO import read_conly, write_csv
+from src.ynicmr import save_vol_time
 
 INFO = {
     'Experiment' : 'mindwandering_msc', # compulsory
@@ -53,8 +54,9 @@ if __name__ == "__main__":
     # hide mouse
     event.Mouse(visible=False)
 
-    # put instruction on screen
-    color = display_instructions(window=Experiment.window, env=settings['env'],
+    # put instruction on screen and get trigger
+    color, trig_collector = display_instructions(
+            window=Experiment.window, env=settings['env'],
             ver=INFO['Version'], skip=skip_instruction)
 
     # create display screens
@@ -102,6 +104,10 @@ if __name__ == "__main__":
         KeyResp = None
         correct = None
         respRT = None
+
+    # save trigger timings
+    if INFO['Environment'] is 'mri':
+       save_vol_time(trig_collector, timer, experiment_info['MRIFile'])
 
     # ending message
     end_msg.duration = 2

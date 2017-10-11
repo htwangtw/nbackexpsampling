@@ -17,17 +17,6 @@ stimulus_dir = './stimuli/'
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
 
-# YNiC fMRI trigger related information
-from sys import platform
-if platform == 'linux2':
-    # in house script ynicstim location
-    YNICSTIM = '/groups/stimpc/ynicstim'
-    SERIAL_PORT = '/dev/ttyS0'
-else:
-    YNICSTIM = 'M:/stimpc/ynicstim'
-    SERIAL_PORT = 'COM1'
-TRIG_PORT = '/dev/parport0'
-
 from psychopy import logging
 from src.fileIO import write_csv, create_headers
 from src.datastructure.stimulus import stimulus_onefeat
