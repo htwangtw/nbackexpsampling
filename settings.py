@@ -99,7 +99,7 @@ def get_trial_generator(block):
     '''
     # now define the generators
     # create experiment parameters
-    parameters = experiment_parameters(block_length=1.5, block_go_n=6, runs=1)
+    parameters = experiment_parameters(block_length=4.5, block_go_n=18, runs=1)
     parameters.load_conditions(condition_path)
     parameters.load_header(trialheader_path)
 
