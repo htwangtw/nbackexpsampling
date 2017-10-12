@@ -3,6 +3,8 @@
 '''settings.py
 Define global and environment-specific settings here.
 '''
+BLOCK_TIME = 1.5
+BLOCK_GO_N = 6
 
 # set the two features we used for making the stimulus
 shape = ['square', 'triangle', 'circle']
@@ -81,6 +83,33 @@ MRI = {
     'input_method': 'serial'
 }
 
+# experiment specific vesion related setting
+VER_A = {
+        'rec_color': 'blue',
+        'loc_color': 'red',
+        'rec_keys': ['z', 'x'],
+        'loc_keys': ['n', 'm'],
+        'rec_keyans': ['yes', 'no'],
+        'loc_keyans': ['left', 'right']
+        }
+
+VER_B = {
+        'rec_color': 'red',
+        'loc_color': 'blue',
+        'rec_keys': ['n', 'm'],
+        'loc_keys': ['z', 'x'],
+        'rec_keyans': ['yes', 'no'],
+        'loc_keyans': ['left', 'right']
+        }
+
+def set_version(ver):
+    if ver is 'A':
+        set_ver = VER_A
+    elif ver is 'B':
+        set_ver = VER_B
+    else:
+        raise Exception('Version unsupported.')
+    return set_ver
 
 def get_trial_generator(block):
     '''
@@ -88,7 +117,8 @@ def get_trial_generator(block):
     '''
     # now define the generators
     # create experiment parameters
-    parameters = experiment_parameters(block_length=4.5, block_go_n=18, runs=1)
+    parameters = experiment_parameters(
+            block_length=BLOCK_TIME, block_go_n=BLOCK_GO_N, runs=1)
     parameters.load_conditions(condition_path)
     parameters.load_header(trialheader_path)
 

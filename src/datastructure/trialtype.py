@@ -231,9 +231,9 @@ class ZeroBackRecog(object):
         dict_row['stimPicMid'] = choice(item_list)
 
         if dict_row['stimPicMid'] in item_list:
-            dict_row['Ans'] = 'left'
+            dict_row['Ans'] = 'yes'
         else:
-            dict_row['Ans'] = 'right'
+            dict_row['Ans'] = 'no'
 
         yield dict_row,self.trial_spec['trial_t_total']
 
@@ -274,8 +274,8 @@ class OneBackRecog(object):
         dict_row = {key: None for key in self.lst_header}
         # create a equal chance to get a present/absent target in the pre trial
         tmp = next(stimulus_generator.generate())
-        item_list = [last_trial['stimPicLeft'], last_trial['stimPicLeft']]
-        item_list += filter(lambda x: x not in item_list, tmp)*2
+        item_list = [last_trial['stimPicLeft'], last_trial['stimPicRight']]
+        item_list += filter(lambda x: x not in item_list, tmp) * 2
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
         dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
@@ -285,10 +285,10 @@ class OneBackRecog(object):
         dict_row['stimPicRight'] = '?'
         dict_row['stimPicMid'] = choice(item_list)
 
-        if dict_row['stimPicMid'] in [last_trial['stimPicLeft'], last_trial['stimPicLeft']]:
-            dict_row['Ans'] = 'left'
+        if dict_row['stimPicMid'] in [last_trial['stimPicLeft'], last_trial['stimPicRight']]:
+            dict_row['Ans'] = 'yes'
         else:
-            dict_row['Ans'] = 'right'
+            dict_row['Ans'] = 'no'
 
         yield dict_row,self.trial_spec['trial_t_total']
 
@@ -348,13 +348,13 @@ class Recognition(object):
             dict_row['stimPicLeft'] = last_trial['stimPicLeft']
             dict_row['stimPicRight'] = distractor
             dict_row['stimPicMid'] = '?'
-            dict_row['Ans'] = 'left'
+            dict_row['Ans'] = 'yes'
 
         else:
             dict_row['stimPicLeft'] = distractor
             dict_row['stimPicRight'] = last_trial['stimPicRight']
             dict_row['stimPicMid'] = '?'
-            dict_row['Ans'] = 'right'
+            dict_row['Ans'] = 'no'
         yield dict_row,self.trial_spec['trial_t_total']
 
 

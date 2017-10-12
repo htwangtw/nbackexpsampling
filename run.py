@@ -30,6 +30,8 @@ experiment_info = subject_info(INFO)
 # set up enviroment variables and generators
 # set test to False when collecting participant
 settings = get_settings(env=INFO['Environment'], test=True)
+#set up version related counter balance stuff
+version = set_version(experiment_info['Version'])
 
 trial_generator, headers =  get_trial_generator(INFO['N-back'])
 
@@ -55,13 +57,13 @@ if __name__ == "__main__":
     event.Mouse(visible=False)
 
     # put instruction on screen and get trigger
-    color, trig_collector = display_instructions(
+    trig_collector = display_instructions(
             window=Experiment.window, env=settings['env'],
-            ver=INFO['Version'], skip=skip_instruction)
+            ver=version, skip=skip_instruction)
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
-    stimulus = responsescreen(window=Experiment.window, color=color)
+    stimulus = responsescreen(window=Experiment.window, version=version)
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = Text(window=Experiment.window, text=endtxt, color='black')
@@ -82,7 +84,7 @@ if __name__ == "__main__":
         fix_t = fixation.show(timer)
 
         # show stimulus screen and catch response
-        stim_t, KeyResp, KeyPressTime, respRT, correct = stim.show(timer)
+        stim_t, KeyResp, Resp, KeyPressTime, respRT, correct = stim.show(timer)
         # post response fixation
         if respRT and trial['stimT'] - respRT > 0:
             fixation.duration = trial['stimT'] - respRT
@@ -92,6 +94,7 @@ if __name__ == "__main__":
         trial['fixStart'] = fix_t
         trial['stimStart'] = stim_t
         trial['keyResp'] = KeyResp
+        trial['resp'] = Resp
         trial['respCORR'] = correct
         trial['respRT'] = respRT
         trial['IDNO'] = experiment_info['Subject']
