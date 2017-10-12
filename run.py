@@ -109,7 +109,7 @@ if __name__ == "__main__":
         respRT = None
 
     # save trigger timings
-    if INFO['Environment'] is 'mri':
+    if settings['Environment'] is 'mri':
        save_vol_time(trig_collector, timer, experiment_info['MRIFile'])
 
     # ending message
