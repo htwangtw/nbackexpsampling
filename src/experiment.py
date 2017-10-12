@@ -244,8 +244,14 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
     This function needs refactoring
     '''
     def _instruction_ver(ver, text):
-        text = text.replace('{COLOUR_0}', ver['rec_color'].upper()) # recognition
-        text  = text.replace('{COLOUR_1}', ver['loc_color'].upper())# location
+        text = text.replace('{COLOR_REC}', ver['rec_color'].upper()) # recognition
+        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())# location
+
+        text = text.replace('{KEY_REC_0}'), ver['rec_keys'][0].upper())
+        text = text.replace('{KEY_REC_1}'), ver['rec_keys'][1].upper())
+        text = text.replace('{KEY_LOC_0}'), ver['loc_keys'][0].upper())
+        text = text.replace('{KEY_LOC_1}'), ver['loc_keys'][1].upper())
+
         return text
 
     instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
