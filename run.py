@@ -29,11 +29,11 @@ experiment_info = subject_info(INFO)
 
 # set up enviroment variables and generators
 # set test to False when collecting participant
-settings = get_settings(env=INFO['Environment'], test=True)
-#set up version related counter balance stuff
-version = set_version(experiment_info['Version'])
+settings = get_settings(
+                env=experiment_info['Environment'],
+                ver=experiment_info['Version'], test=True)
 
-trial_generator, headers =  get_trial_generator(INFO['N-back'])
+trial_generator, headers =  get_trial_generator(experiment_info['N-back'])
 
 # skip instruction expect run 1
 if experiment_info['Session'] == '1':
@@ -57,13 +57,13 @@ if __name__ == "__main__":
     event.Mouse(visible=False)
 
     # put instruction on screen and get trigger
-    trig_collector = display_instructions(
-            window=Experiment.window, env=settings['env'],
-            ver=version, skip=skip_instruction)
+    display_instructions(
+            window=Experiment.window,
+            settings=settings, skip=skip_instruction)
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
-    stimulus = responsescreen(window=Experiment.window, version=version)
+    stimulus = responsescreen(window=Experiment.window, version=settings)
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = Text(window=Experiment.window, text=endtxt, color='black')
@@ -107,10 +107,6 @@ if __name__ == "__main__":
         KeyResp = None
         correct = None
         respRT = None
-
-    # save trigger timings
-    if settings['Environment'] is 'mri':
-       save_vol_time(trig_collector, timer, experiment_info['MRIFile'])
 
     # ending message
     end_msg.duration = 2

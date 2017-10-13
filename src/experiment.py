@@ -238,12 +238,74 @@ def quitEXP(endExpNow):
         print 'user cancel'
         core.quit()
 
-def display_instructions(window, env, ver, txt_color='black', skip=False):
+class instructions(object):
+    '''
+    show instruction and wait for trigger
+    '''
+    def __init__(self, window, settings, instruction_txt, ready_txt):
+        self.window = window
+        self.setting = settings
+        self.env = settings['env']
+        self.instruction_txt = load_instruction(instruction_txt)
+        self.ready_txt = load_instruction(ready_txt)[0]
+
+        self.display = visual.TextStim(
+                window, text='default text', font=sans,
+                name='instruction',
+                pos=[-50,0], height=30, wrapWidth=1100,
+                color='black',
+                ) #object to display instructions
+
+    def parse_inst(self):
+        self.instruction_txt = self.instruction_txt.replace(
+                '{COLOR_REC}', self.settings['rec_color'].upper())
+        self.instruction_txt = self.instruction_txt.replace(
+                '{COLOR_LOC}', self.settings['loc_color'].upper())
+        self.instruction_txt = self.instruction_txt.replace(
+                '{KEY_REC_0}'), self.settings['rec_keys'][0].upper())
+        self.instruction_txt = self.instruction_txt.replace(
+                '{KEY_REC_1}'), self.settings['rec_keys'][1].upper())
+        self.instruction_txt = self.instruction_txt.replace(
+                '{KEY_LOC_0}'), self.settings['loc_keys'][0].upper())
+        self.instruction_txt = self.instruction_txt.replace(
+                '{KEY_LOC_1}'), self.settings['loc_keys'][1].upper())
+
+        return self.instruction_txt
+
+    def show(self):
+        # get instruction
+        self.parse_inst()
+        for i, cur in enumerate(self.instruction_txt):
+            self.display.setText(cur)
+            self.display.draw()
+            self.window.flip()
+            if i==0:
+                core.wait(uniform(1.3,1.75))
+            elif self.env == 'mri':
+                event.waitKeys(keyList=['1', '2', '3', '4'])
+            else:
+                event.waitKeys(keyList=['return'])
+
+        # wait for trigger; or just wait
+        self.display.setText(self.ready_txt)
+        self.display.draw()
+        self.window.flip()
+
+        if self.env == 'lab':
+            core.wait(uniform(1.3,1.75))
+        elif self.env == 'mri':
+            event.waitKeys(keyList=['5'])
+        else: # not supported
+            raise Exception('Unknown environment setting')
+
+
+def display_instructions(window, settings, txt_color='black', skip=False):
     '''
     Show instruction and get trigger/wait screen
     This function needs refactoring
     '''
     def _instruction_ver(ver, text):
+<<<<<<< HEAD
         text = text.replace('{COLOR_REC}', ver['rec_color'].upper()) # recognition
         text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())# location
 
@@ -251,11 +313,22 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
         text = text.replace('{KEY_REC_1}', ver['rec_keys'][1].upper())
         text = text.replace('{KEY_LOC_0}', ver['loc_keys'][0].upper())
         text = text.replace('{KEY_LOC_1}', ver['loc_keys'][1].upper())
+=======
+        text = text.replace('{COLOR_REC}', ver['rec_color'].upper())
+        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())
+        text = text.replace('{KEY_REC_0}'), ver['rec_keys'][0].upper())
+        text = text.replace('{KEY_REC_1}'), ver['rec_keys'][1].upper())
+        text = text.replace('{KEY_LOC_0}'), ver['loc_keys'][0].upper())
+        text = text.replace('{KEY_LOC_1}'), ver['loc_keys'][1].upper())
+>>>>>>> 065e48772dce4fd33576e8163c05815a6a6512d1
 
         return text
 
-    instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
-    ready_txt = load_instruction(os.path.abspath('./instructions/wait_trigger.txt'))[0]
+    env = settings['env']
+    instruction_txt = load_instruction(
+            os.path.abspath('./instructions/exp_instr.txt'))
+    ready_txt = load_instruction(
+            os.path.abspath('./instructions/wait_trigger.txt'))[0]
 
     instruction_stimuli = visual.TextStim(
         window, text='default text', font=sans,
@@ -264,7 +337,7 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
         color=txt_color,
         ) #object to display instructions
 
-    instruction_txt[1] = _instruction_ver(ver, instruction_txt[1])
+    instruction_txt[1] = _instruction_ver(settings, instruction_txt[1])
 
     #instructions screen
     if skip:
@@ -274,28 +347,25 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
             instruction_stimuli.setText(cur)
             instruction_stimuli.draw()
             window.flip()
-            if i==0:
+            if i==0:y
                 core.wait(uniform(1.3,1.75))
             else:
                 # need a self-pace version for MR
                 event.waitKeys(keyList=['return'])
+
     # wait for trigger; or just wait
     instruction_stimuli.setText(ready_txt)
     instruction_stimuli.draw()
 
-    trig_collector = None
     if env == 'lab':
         window.flip()
         core.wait(uniform(1.3,1.75))
     elif env == 'mri':
-        from src.ynicmr import get_trig_collector, DUMMY_VOL
-        window.flip()
-        trig_collector = get_trig_collector()
-        trig_collector.start()
-        trig_collector.waitForVolume(DUMMY_VOL)
+        event.waitKeys(keyList=['5'])
     else: # not supported
         raise Exception('Unknown environment setting')
-    return trig_collector
+
+    return pass
 
 def subject_info(experiment_info):
     '''

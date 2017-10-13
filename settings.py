@@ -19,6 +19,17 @@ stimulus_dir = './stimuli/'
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
 
+# task instruction
+instr_txt = './instructions/exp_instr.txt'
+
+# wait trigger screen
+ready_txt = './instructions/wait_trigger.txt'
+
+
+# MRI related settings
+dummy_vol = 3
+slice_per_vol = 60
+
 from psychopy import logging
 from src.fileIO import write_csv, create_headers
 from src.datastructure.stimulus import stimulus_onefeat
@@ -102,14 +113,15 @@ VER_B = {
         'loc_keyans': ['left', 'right']
         }
 
-def set_version(ver):
-    if ver is 'A':
-        set_ver = VER_A
-    elif ver is 'B':
-        set_ver = VER_B
-    else:
-        raise Exception('Version unsupported.')
-    return set_ver
+VER_A_MRI = {
+            'rec_keys': ['1', '2'],
+            'loc_keys': ['3', '4']
+            }
+
+VER_B_MRI = {
+            'rec_keys': ['3', '4'],
+            'loc_keys': ['1', '2']
+            }
 
 def get_trial_generator(block):
     '''
@@ -136,13 +148,23 @@ def get_trial_generator(block):
     return trial_generator, parameters.headers
 
 
-def get_settings(env, test=False):
+def get_settings(env, ver, test=False):
     '''Return a dictionary of settings based on
     the specified environment, given by the parameter
     env. Can also specify whether or not to use testing settings.
+
+    Include keypress counter balancing
     '''
     # Start with the base settings
     settings = BASE
+
+    # display and key press counter balancing
+    if ver == 'A':
+        settings.update(VER_A)
+    elif ver == 'B':
+        settings.update(VER_B)
+    else:
+        raise ValueError, 'Version "{0}" not supported.'.format(ver)
 
     if env == 'lab':
         settings.update(LAB)
@@ -150,6 +172,12 @@ def get_settings(env, test=False):
     #     settings.update(DEV)
     elif env == 'mri':
         settings.update(MRI)
+        if ver == 'A':
+            settings.update(VER_A_MRI)
+        elif ver == 'B':
+            settings.upate(VER_B_MRI)
+        else:
+            raise ValueError, 'Version "{0}" not supported.'.format(ver)
     else:
         raise ValueError, 'Environment "{0}" not supported.'.format(env)
 
@@ -160,7 +188,7 @@ def get_settings(env, test=False):
     else:
         settings.update(PRODUCTION)
 
-    return settings
+   return settings
 
 from src.datastructure.stimulus import tup2str
 
