@@ -29,6 +29,7 @@ ready_txt = './instructions/wait_trigger.txt'
 
 # MRI related settings
 dummy_vol = 3
+tr = 2
 slice_per_vol = 60
 
 from psychopy import logging
