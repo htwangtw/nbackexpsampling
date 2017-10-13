@@ -70,6 +70,9 @@ if __name__ == "__main__":
     else:
         pass
 
+    # wait trigger
+    instructions.waitTrigger()
+
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
     stimulus = responsescreen(window=Experiment.window, version=settings)

@@ -286,6 +286,7 @@ class instructions(object):
             else:
                 event.waitKeys(keyList=['return'])
 
+    def waitTrigger(self):
         # wait for trigger; or just wait
         self.display.setText(self.ready_txt)
         self.display.draw()
