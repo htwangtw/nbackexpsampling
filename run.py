@@ -19,7 +19,7 @@ INFO = {
     'Session': '1', # compulsory
     'Version': ['A', 'B'], # counterbalance the fixation cross
     'N-back': ['0', '1'], # start the task with 1-back or 0-back
-    'Environment': ['lab', 'mri']
+    'Environment': ['mri']
     }
 
 
