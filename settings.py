@@ -116,11 +116,11 @@ VER_B = {
 
 VER_A_MRI = {
             'rec_keys': ['1', '2'],
-            'loc_keys': ['3', '4']
+            'loc_keys': ['6', '7']
             }
 
 VER_B_MRI = {
-            'rec_keys': ['3', '4'],
+            'rec_keys': ['6', '7'],
             'loc_keys': ['1', '2']
             }
 
