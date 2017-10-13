@@ -3,6 +3,8 @@
 '''settings.py
 Define global and environment-specific settings here.
 '''
+BLOCK_TIME = 1.5
+BLOCK_GO_N = 6
 
 # set the two features we used for making the stimulus
 shape = ['square', 'triangle', 'circle']
@@ -17,16 +19,16 @@ stimulus_dir = './stimuli/'
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
 
-# YNiC fMRI trigger related information
-from sys import platform
-if platform == 'linux2':
-    # in house script ynicstim location
-    YNICSTIM = '/groups/stimpc/ynicstim'
-    SERIAL_PORT = '/dev/ttyS0'
-else:
-    YNICSTIM = 'M:/stimpc/ynicstim'
-    SERIAL_PORT = 'COM1'
-TRIG_PORT = '/dev/parport0'
+# task instruction
+instr_txt = './instructions/exp_instr.txt'
+
+# wait trigger screen
+ready_txt = './instructions/wait_trigger.txt'
+
+
+# MRI related settings
+dummy_vol = 3
+slice_per_vol = 60
 
 from psychopy import logging
 from src.fileIO import write_csv, create_headers
@@ -92,6 +94,34 @@ MRI = {
     'input_method': 'serial'
 }
 
+# experiment specific vesion related setting
+VER_A = {
+        'rec_color': 'blue',
+        'loc_color': 'red',
+        'rec_keys': ['z', 'x'],
+        'loc_keys': ['n', 'm'],
+        'rec_keyans': ['yes', 'no'],
+        'loc_keyans': ['left', 'right']
+        }
+
+VER_B = {
+        'rec_color': 'red',
+        'loc_color': 'blue',
+        'rec_keys': ['n', 'm'],
+        'loc_keys': ['z', 'x'],
+        'rec_keyans': ['yes', 'no'],
+        'loc_keyans': ['left', 'right']
+        }
+
+VER_A_MRI = {
+            'rec_keys': ['1', '2'],
+            'loc_keys': ['3', '4']
+            }
+
+VER_B_MRI = {
+            'rec_keys': ['3', '4'],
+            'loc_keys': ['1', '2']
+            }
 
 def get_trial_generator(block):
     '''
@@ -99,7 +129,8 @@ def get_trial_generator(block):
     '''
     # now define the generators
     # create experiment parameters
-    parameters = experiment_parameters(block_length=1.5, block_catch_n=6, runs=1)
+    parameters = experiment_parameters(
+            block_length=BLOCK_TIME, block_go_n=BLOCK_GO_N, runs=1)
     parameters.load_conditions(condition_path)
     parameters.load_header(trialheader_path)
 
@@ -117,13 +148,23 @@ def get_trial_generator(block):
     return trial_generator, parameters.headers
 
 
-def get_settings(env, test=False):
+def get_settings(env, ver, test=False):
     '''Return a dictionary of settings based on
     the specified environment, given by the parameter
     env. Can also specify whether or not to use testing settings.
+
+    Include keypress counter balancing
     '''
     # Start with the base settings
     settings = BASE
+
+    # display and key press counter balancing
+    if ver == 'A':
+        settings.update(VER_A)
+    elif ver == 'B':
+        settings.update(VER_B)
+    else:
+        raise ValueError, 'Version "{0}" not supported.'.format(ver)
 
     if env == 'lab':
         settings.update(LAB)
@@ -131,6 +172,12 @@ def get_settings(env, test=False):
     #     settings.update(DEV)
     elif env == 'mri':
         settings.update(MRI)
+        if ver == 'A':
+            settings.update(VER_A_MRI)
+        elif ver == 'B':
+            settings.upate(VER_B_MRI)
+        else:
+            raise ValueError, 'Version "{0}" not supported.'.format(ver)
     else:
         raise ValueError, 'Environment "{0}" not supported.'.format(env)
 

@@ -85,18 +85,19 @@ class Text(object):
         core.wait(self.duration)
 
         # set the following so it's competeble to responese screen
+        Resp = None
         KeyResp = None
         KeyPressTime = None
         respRT = None
         correct = None
 
-        return start_trial, KeyResp, KeyPressTime, respRT, correct
+        return start_trial, KeyResp, Resp, KeyPressTime, respRT, correct
 
 class responsescreen(object):
     '''
     the screen for the memory task
     '''
-    def __init__(self, window, color):
+    def __init__(self, window, version):
         self.window = window
         self.line = visual.ShapeStim(self.window , name='verticle line',
                         lineColor=None, fillColor='black',
@@ -124,7 +125,9 @@ class responsescreen(object):
         self.present_right = None
         self.present_mid = None
 
-        self.color = color
+        self.version = version
+        self.keylist = []
+        self.keyans = []
 
     def set_trial(self, trial):
         self.duration = trial['stimT']
@@ -134,11 +137,16 @@ class responsescreen(object):
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
         elif 'Recog' in trial['TrialType']:
-            self.line.fillColor = self.color[0]
-            self.dash.fillColor = self.color[0]
+            self.line.fillColor = self.version['rec_color']
+            self.dash.fillColor = self.version['rec_color']
+            self.keylist = self.version['rec_keys']
+            self.keyans = self.version['rec_keyans']
+
         elif 'Back' in trial['TrialType']:
-            self.line.fillColor = self.color[1]
-            self.dash.fillColor = self.color[1]
+            self.line.fillColor = self.version['loc_color']
+            self.dash.fillColor = self.version['loc_color']
+            self.keylist = self.version['loc_keys']
+            self.keyans = self.version['loc_keyans']
 
         if '?' == trial['stimPicLeft']:
             self.present_left = self.quest_left
@@ -165,6 +173,7 @@ class responsescreen(object):
         correct = None
         respRT = np.nan
         KeyResp = None
+        Resp = None
         KeyPressTime = np.nan
 
         self.line.draw()
@@ -183,31 +192,33 @@ class responsescreen(object):
             self.present_mid.draw()
             self.window.flip()
 
-            KeyResp, KeyPressTime = get_keyboard(clock, ['left', 'right'])
+            KeyResp, Resp, KeyPressTime = get_keyboard(
+                    clock, self.keylist, self.keyans)
 
         # get reaction time and key press
         if not np.isnan(KeyPressTime):
             respRT = KeyPressTime - start_trial
         else:
-            KeyResp = 'None'
+            KeyResp, Resp = 'None', 'None'
 
         # get correct trials
-        if self.ans == KeyResp:
+        if self.ans == Resp:
             correct = 1
         else:
             correct = 0
 
-        return start_trial, KeyResp, KeyPressTime, respRT, correct
+        return start_trial, KeyResp, Resp, KeyPressTime, respRT, correct
 
 # class question(object):
 #     '''
 #     collect mind wandering report
 #     '''
 
-def get_keyboard(timer, respkeylist):
+def get_keyboard(timer, respkeylist, keyans):
     '''
     Get key board response
     '''
+    Resp = None
     KeyResp = None
     KeyPressTime = np.nan
     keylist = ['escape'] + respkeylist
@@ -217,37 +228,107 @@ def get_keyboard(timer, respkeylist):
             quitEXP(True)
         else:
             KeyResp, KeyPressTime = key, time
-
-    return KeyResp, KeyPressTime
+    # get what the key press means
+    if KeyResp:
+        Resp = keyans[respkeylist.index(KeyResp)]
+    return KeyResp, Resp, KeyPressTime
 
 def quitEXP(endExpNow):
     if endExpNow:
         print 'user cancel'
         core.quit()
 
-def display_instructions(window, env, ver, txt_color='black', skip=False):
-    def _instruction_ver(ver, text):
-        # change instruction according to ver
-        # ver A: blue for recognition; red for location
-        # ver B: red for recognition; blue for location
-        if ver is 'A':
-            color = ['blue', 'red']
-        else:
-            color = ['red', 'blue']
-        text = text.replace('{COLOUR_0}', color[0].upper()) # recognition
-        text  = text.replace('{COLOUR_1}', color[1].upper())# location
-        return color, text
+class instructions(object):
+    '''
+    show instruction and wait for trigger
+    '''
+    def __init__(self, window, settings, instruction_txt, ready_txt):
+        self.window = window
+        self.settings = settings
+        self.env = settings['env']
+        self.instruction_txt = load_instruction(instruction_txt)
+        self.ready_txt = load_instruction(ready_txt)[0]
 
-    instruction_txt = load_instruction(os.path.abspath('./instructions/exp_instr.txt'))
-    ready_txt = load_instruction(os.path.abspath('./instructions/wait_trigger.txt'))[0]
+        self.display = visual.TextStim(
+                window, text='default text', font=sans,
+                name='instruction',
+                pos=[-50,0], height=30, wrapWidth=1100,
+                color='black',
+                ) #object to display instructions
+
+    def parse_inst(self):
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{COLOR_REC}', self.settings['rec_color'].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{COLOR_LOC}', self.settings['loc_color'].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_REC_0}', self.settings['rec_keys'][0].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_REC_1}', self.settings['rec_keys'][1].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_LOC_0}', self.settings['loc_keys'][0].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_LOC_1}', self.settings['loc_keys'][1].upper())
+
+        return self.instruction_txt
+
+    def show(self):
+        # get instruction
+        self.parse_inst()
+        for i, cur in enumerate(self.instruction_txt):
+            self.display.setText(cur)
+            self.display.draw()
+            self.window.flip()
+            if i==0:
+                core.wait(uniform(1.3,1.75))
+            elif self.env == 'mri':
+                event.waitKeys(keyList=['1', '2', '3', '4'])
+            else:
+                event.waitKeys(keyList=['return'])
+
+        # wait for trigger; or just wait
+        self.display.setText(self.ready_txt)
+        self.display.draw()
+        self.window.flip()
+
+        if self.env == 'lab':
+            core.wait(uniform(1.3,1.75))
+        elif self.env == 'mri':
+            event.waitKeys(keyList=['5'])
+        else: # not supported
+            raise Exception('Unknown environment setting')
+
+
+def display_instructions(window, settings, txt_color='black', skip=False):
+    '''
+    Show instruction and get trigger/wait screen
+    This function needs refactoring
+    '''
+    def _instruction_ver(ver, text):
+        text = text.replace('{COLOR_REC}', ver['rec_color'].upper())
+        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())
+        text = text.replace('{KEY_REC_0}', ver['rec_keys'][0].upper())
+        text = text.replace('{KEY_REC_1}', ver['rec_keys'][1].upper())
+        text = text.replace('{KEY_LOC_0}', ver['loc_keys'][0].upper())
+        text = text.replace('{KEY_LOC_1}', ver['loc_keys'][1].upper())
+        return text
+
+    env = settings['env']
+    instruction_txt = load_instruction(
+            os.path.abspath('./instructions/exp_instr.txt'))
+    ready_txt = load_instruction(
+            os.path.abspath('./instructions/wait_trigger.txt'))[0]
+
     instruction_stimuli = visual.TextStim(
         window, text='default text', font=sans,
         name='instruction',
         pos=[-50,0], height=30, wrapWidth=1100,
         color=txt_color,
         ) #object to display instructions
-    color, instruction_txt[1] = _instruction_ver(ver, instruction_txt[1])
-        #instructions screen
+
+    instruction_txt[1] = _instruction_ver(settings, instruction_txt[1])
+
+    #instructions screen
     if skip:
         pass
     else:
@@ -261,16 +342,17 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
                 # need a self-pace version for MR
                 event.waitKeys(keyList=['return'])
 
+    # wait for trigger; or just wait
     instruction_stimuli.setText(ready_txt)
     instruction_stimuli.draw()
-    window.flip()
 
     if env == 'lab':
+        window.flip()
         core.wait(uniform(1.3,1.75))
-    else:
-        pass
-        #need to update a fmri version (setting dev and mri)
-    return color
+    elif env == 'mri':
+        event.waitKeys(keyList=['5'])
+    else: # not supported
+        raise Exception('Unknown environment setting')
 
 def subject_info(experiment_info):
     '''
@@ -284,8 +366,12 @@ def subject_info(experiment_info):
 
     file_root = ('_').join([experiment_info['Subject'], experiment_info['Session'],
                             experiment_info['Experiment'], experiment_info['Date']])
+
     experiment_info['DataFile'] = 'data' + os.path.sep + file_root + '.csv'
     experiment_info['LogFile'] = 'data' + os.path.sep + file_root + '.log'
+
+    if experiment_info['Environment'] is 'mri':
+        experiment_info['MRIFile'] = 'data' + os.path.sep + file_root + '_voltime.csv'
 
     if infoDlg.OK:
         return experiment_info

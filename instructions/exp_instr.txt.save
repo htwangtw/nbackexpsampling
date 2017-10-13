@@ -15,11 +15,9 @@ You answer according to the PREVIOUS screen.
 
 There are two type of events, a location event and a recognition event. 
 If the line is {COLOR_REC}, the trial is a Recognition event - please indicate weather the target is/was presented;
-You are using key {KEY_REC_0} and {KEY_REC_1} to indicate YES or NO.
-
 If the line is {COLOR_LOC}, the trial is a Location event - please indicate the location of the target.
-You are using key {KEY_LOC_0} and {KEY_LOC_1} to indicate LEFT or RIGHT.
 
-You should try to be as quick and accurate as possible.
+When the fixation cross is {COLOR_REC}, the {KEY_REC_0} button indicates {RESP_REC_0}, the {KEY_REC_1} button indicates {RESP_REC_1}.
+When the fixation cross is {COLOR_LOC}, When the fixation cross is {COLOR_REC}, the {KEY_REC_0} button indicates {RESP_REC_0}, the {KEY_REC_1} button indicates {RESP_REC_1}.hould try to be as quick and accurate as possible.
 
 Press RETURN to start the task.

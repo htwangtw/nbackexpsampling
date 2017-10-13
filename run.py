@@ -12,6 +12,7 @@ from psychopy import core, event, logging, visual
 from settings import *
 from src.experiment import *
 from src.fileIO import read_conly, write_csv
+from src.ynicmr import save_vol_time
 
 INFO = {
     'Experiment' : 'mindwandering_msc', # compulsory
@@ -28,9 +29,11 @@ experiment_info = subject_info(INFO)
 
 # set up enviroment variables and generators
 # set test to False when collecting participant
-settings = get_settings(env=INFO['Environment'], test=True)
+settings = get_settings(
+                env=experiment_info['Environment'],
+                ver=experiment_info['Version'], test=True)
 
-trial_generator, headers =  get_trial_generator(INFO['N-back'])
+trial_generator, headers =  get_trial_generator(experiment_info['N-back'])
 
 # skip instruction expect run 1
 if experiment_info['Session'] == '1':
@@ -53,13 +56,23 @@ if __name__ == "__main__":
     # hide mouse
     event.Mouse(visible=False)
 
-    # put instruction on screen
-    color = display_instructions(window=Experiment.window, env=settings['env'],
-            ver=INFO['Version'], skip=skip_instruction)
+    # put instruction on screen and get trigger
+#    display_instructions(
+#            window=Experiment.window,
+#            settings=settings, skip=skip_instruction)
+
+    instructions = instructions(window=Experiment.window, settings=settings,
+            instruction_txt=instr_txt, ready_txt=ready_txt)
+
+    # skip instruction except run 1
+    if experiment_info['Session'] == '1':
+        instructions.show()
+    else:
+        pass
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
-    stimulus = responsescreen(window=Experiment.window, color=color)
+    stimulus = responsescreen(window=Experiment.window, version=settings)
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = Text(window=Experiment.window, text=endtxt, color='black')
@@ -76,12 +89,11 @@ if __name__ == "__main__":
         # prepare fixation cross and stimulus display
         fixation.set_trial(trial)
         stim = get_stim_screen(trial, switch, stimulus)
-        print(trial['TrialType'])
         # show fixation
         fix_t = fixation.show(timer)
 
         # show stimulus screen and catch response
-        stim_t, KeyResp, KeyPressTime, respRT, correct = stim.show(timer)
+        stim_t, KeyResp, Resp, KeyPressTime, respRT, correct = stim.show(timer)
         # post response fixation
         if respRT and trial['stimT'] - respRT > 0:
             fixation.duration = trial['stimT'] - respRT
@@ -91,6 +103,7 @@ if __name__ == "__main__":
         trial['fixStart'] = fix_t
         trial['stimStart'] = stim_t
         trial['keyResp'] = KeyResp
+        trial['resp'] = Resp
         trial['respCORR'] = correct
         trial['respRT'] = respRT
         trial['IDNO'] = experiment_info['Subject']
