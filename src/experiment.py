@@ -247,10 +247,10 @@ def display_instructions(window, env, ver, txt_color='black', skip=False):
         text = text.replace('{COLOR_REC}', ver['rec_color'].upper()) # recognition
         text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())# location
 
-        text = text.replace('{KEY_REC_0}'), ver['rec_keys'][0].upper())
-        text = text.replace('{KEY_REC_1}'), ver['rec_keys'][1].upper())
-        text = text.replace('{KEY_LOC_0}'), ver['loc_keys'][0].upper())
-        text = text.replace('{KEY_LOC_1}'), ver['loc_keys'][1].upper())
+        text = text.replace('{KEY_REC_0}', ver['rec_keys'][0].upper())
+        text = text.replace('{KEY_REC_1}', ver['rec_keys'][1].upper())
+        text = text.replace('{KEY_LOC_0}', ver['loc_keys'][0].upper())
+        text = text.replace('{KEY_LOC_1}', ver['loc_keys'][1].upper())
 
         return text
 
