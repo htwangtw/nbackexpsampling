@@ -244,7 +244,7 @@ class instructions(object):
     '''
     def __init__(self, window, settings, instruction_txt, ready_txt):
         self.window = window
-        self.setting = settings
+        self.settings = settings
         self.env = settings['env']
         self.instruction_txt = load_instruction(instruction_txt)
         self.ready_txt = load_instruction(ready_txt)[0]
@@ -257,18 +257,18 @@ class instructions(object):
                 ) #object to display instructions
 
     def parse_inst(self):
-        self.instruction_txt = self.instruction_txt.replace(
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
                 '{COLOR_REC}', self.settings['rec_color'].upper())
-        self.instruction_txt = self.instruction_txt.replace(
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
                 '{COLOR_LOC}', self.settings['loc_color'].upper())
-        self.instruction_txt = self.instruction_txt.replace(
-                '{KEY_REC_0}'), self.settings['rec_keys'][0].upper())
-        self.instruction_txt = self.instruction_txt.replace(
-                '{KEY_REC_1}'), self.settings['rec_keys'][1].upper())
-        self.instruction_txt = self.instruction_txt.replace(
-                '{KEY_LOC_0}'), self.settings['loc_keys'][0].upper())
-        self.instruction_txt = self.instruction_txt.replace(
-                '{KEY_LOC_1}'), self.settings['loc_keys'][1].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_REC_0}', self.settings['rec_keys'][0].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_REC_1}', self.settings['rec_keys'][1].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_LOC_0}', self.settings['loc_keys'][0].upper())
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{KEY_LOC_1}', self.settings['loc_keys'][1].upper())
 
         return self.instruction_txt
 
@@ -305,23 +305,12 @@ def display_instructions(window, settings, txt_color='black', skip=False):
     This function needs refactoring
     '''
     def _instruction_ver(ver, text):
-<<<<<<< HEAD
-        text = text.replace('{COLOR_REC}', ver['rec_color'].upper()) # recognition
-        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())# location
-
+        text = text.replace('{COLOR_REC}', ver['rec_color'].upper())
+        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())
         text = text.replace('{KEY_REC_0}', ver['rec_keys'][0].upper())
         text = text.replace('{KEY_REC_1}', ver['rec_keys'][1].upper())
         text = text.replace('{KEY_LOC_0}', ver['loc_keys'][0].upper())
         text = text.replace('{KEY_LOC_1}', ver['loc_keys'][1].upper())
-=======
-        text = text.replace('{COLOR_REC}', ver['rec_color'].upper())
-        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())
-        text = text.replace('{KEY_REC_0}'), ver['rec_keys'][0].upper())
-        text = text.replace('{KEY_REC_1}'), ver['rec_keys'][1].upper())
-        text = text.replace('{KEY_LOC_0}'), ver['loc_keys'][0].upper())
-        text = text.replace('{KEY_LOC_1}'), ver['loc_keys'][1].upper())
->>>>>>> 065e48772dce4fd33576e8163c05815a6a6512d1
-
         return text
 
     env = settings['env']
@@ -347,7 +336,7 @@ def display_instructions(window, settings, txt_color='black', skip=False):
             instruction_stimuli.setText(cur)
             instruction_stimuli.draw()
             window.flip()
-            if i==0:y
+            if i==0:
                 core.wait(uniform(1.3,1.75))
             else:
                 # need a self-pace version for MR
@@ -364,8 +353,6 @@ def display_instructions(window, settings, txt_color='black', skip=False):
         event.waitKeys(keyList=['5'])
     else: # not supported
         raise Exception('Unknown environment setting')
-
-    return pass
 
 def subject_info(experiment_info):
     '''

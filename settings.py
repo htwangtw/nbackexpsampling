@@ -188,7 +188,7 @@ def get_settings(env, ver, test=False):
     else:
         settings.update(PRODUCTION)
 
-   return settings
+    return settings
 
 from src.datastructure.stimulus import tup2str
 

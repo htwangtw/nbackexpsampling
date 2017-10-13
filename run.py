@@ -57,9 +57,18 @@ if __name__ == "__main__":
     event.Mouse(visible=False)
 
     # put instruction on screen and get trigger
-    display_instructions(
-            window=Experiment.window,
-            settings=settings, skip=skip_instruction)
+#    display_instructions(
+#            window=Experiment.window,
+#            settings=settings, skip=skip_instruction)
+
+    instructions = instructions(window=Experiment.window, settings=settings,
+            instruction_txt=instr_txt, ready_txt=ready_txt)
+
+    # skip instruction except run 1
+    if experiment_info['Session'] == '1':
+        instructions.show()
+    else:
+        pass
 
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
