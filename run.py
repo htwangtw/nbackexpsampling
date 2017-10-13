@@ -31,7 +31,7 @@ experiment_info = subject_info(INFO)
 # set test to False when collecting participant
 settings = get_settings(
                 env=experiment_info['Environment'],
-                ver=experiment_info['Version'], test=True)
+                ver=experiment_info['Version'], test=False)
 
 trial_generator, headers =  get_trial_generator(experiment_info['N-back'])
 

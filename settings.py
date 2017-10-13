@@ -175,7 +175,7 @@ def get_settings(env, ver, test=False):
         if ver == 'A':
             settings.update(VER_A_MRI)
         elif ver == 'B':
-            settings.upate(VER_B_MRI)
+            settings.update(VER_B_MRI)
         else:
             raise ValueError, 'Version "{0}" not supported.'.format(ver)
     else:

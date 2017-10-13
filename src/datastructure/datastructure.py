@@ -263,14 +263,18 @@ class trial_builder(object):
             blocks = self.set_block_sequence(experiment_parameters.conditions, block)
             # initialize the output storage and the counter
             run  = []
+            trial_idx_tmp = 0
+
             init_task_t, init_go_n = experiment_parameters.create_counter()
+
             for block in blocks:
                 self.initialise(init_task_t, [9, 9]) # HW- hard coding this for now
 
                 # get the specific go trials according to the block you are in
                 trial_NoGo, trial_Go = self.block_trials(
                         trial_finder, block, experiment_parameters.headers)
-
+                self.trial_index = trial_idx_tmp
+                print self.trial_index
                 while self.task_t != 0: # start counting
                     for i in range(experiment_parameters.block_go_n):
                         # get no-go trial number
@@ -313,15 +317,16 @@ class trial_builder(object):
                     cur_trial['stimPicLeft'] = None
                     cur_trial['stimPicRight'] = None
 
-                    self.save_trial(cur_trial, block)
-
+                    self.save_trial(cur_trial, 'Switch')
                     if self.task_t != 0:
                         # if this list of trials is not good for the block, restart
                         self.initialise(init_task_t, [9, 9])
+                        self.trial_index = trial_idx_tmp
                     else:
                         # if it's good save this block to the run
                         print 'save this block'
                         run += self.dict_trials
+                        trial_idx_tmp = self.trial_index
             yield run
 
 
