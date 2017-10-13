@@ -7,6 +7,7 @@ set working directory to the task folder before runing this example
 
 H.T. Wang
 '''
+
 # example 1: build your own
 from src.fileIO import write_csv, create_headers
 from src.datastructure.stimulus import stimulus_onefeat
@@ -69,4 +70,4 @@ for trial in trials:
     # the stimulus is saved as a tuple in the dictionar, use tup2str function in module stimulus
     # uncomment the following lines to compare theout put
     #
-     write_csv(fileName='../example_run2.csv', list_headers=parameters.headers, thisTrial=trial)
+     write_csv(fileName='../example.csv', list_headers=parameters.headers, thisTrial=trial)
