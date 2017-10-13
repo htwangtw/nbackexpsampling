@@ -13,13 +13,17 @@ You answer according to the CURRENT screen.
 When an event occurs in a 1-back block, the screen displays a pair of "?" and a smaller target item in the middle.
 You answer according to the PREVIOUS screen.
 
+Press 1 to continue reading.
+#
 There are two type of events, a location event and a recognition event. 
-If the line is {COLOR_REC}, the trial is a Recognition event - please indicate weather the target is/was presented;
+If the line is {COLOR_REC}, the trial is a Recognition event.
+please indicate weather the target is/was presented.
 You are using key {KEY_REC_0} and {KEY_REC_1} to indicate YES or NO.
 
-If the line is {COLOR_LOC}, the trial is a Location event - please indicate the location of the target.
+If the line is {COLOR_LOC}, the trial is a Location event.
+Please indicate the location of the target.
 You are using key {KEY_LOC_0} and {KEY_LOC_1} to indicate LEFT or RIGHT.
 
 You should try to be as quick and accurate as possible.
 
-Press RETURN to start the task.
+Press 1 to start the task.
