@@ -3,8 +3,9 @@
 '''settings.py
 Define global and environment-specific settings here.
 '''
-BLOCK_TIME = 1.5
-BLOCK_GO_N = 6
+# there's a bug in datastructure so don't change the next two lines
+BLOCK_TIME = 4.5 
+BLOCK_GO_N = 18
 
 # set the two features we used for making the stimulus
 shape = ['square', 'triangle', 'circle']
