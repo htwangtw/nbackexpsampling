@@ -1,4 +1,3 @@
 The session is now finished. Please call the experimenter or exit the experiment.
 
-Press RETURN to exit the task.
-#
+The session will close automatically.

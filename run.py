@@ -19,7 +19,7 @@ INFO = {
     'Session': '1', # compulsory
     'Version': ['A', 'B'], # counterbalance the fixation cross
     'N-back': ['0', '1'], # start the task with 1-back or 0-back
-    'Environment': ['lab', 'mri']
+    'Environment': ['mri', 'lab']
     }
 
 
@@ -69,9 +69,6 @@ if __name__ == "__main__":
     else:
         pass
 
-    # wait trigger
-    instructions.waitTrigger()
-
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
     stimulus = responsescreen(window=Experiment.window, version=settings)
@@ -81,10 +78,17 @@ if __name__ == "__main__":
 
     # generate trials
     Experiment.trials= next(trial_generator)
-
+    # wait trigger
+    instructions.waitTrigger()
     # get a global clock
     timer = core.Clock()
-
+    
+    # dummy volumes
+    if experiment_info['Environment'] is 'mri':
+        fixation.set_trial({'fixT': tr * dummy_vol})
+        t = fixation.show(timer)
+        print('dummy volume start', t)
+        
     for trial in Experiment.trials:
         # parse tuples to proper file names
         trial = parse_stimulus_name(trial)
