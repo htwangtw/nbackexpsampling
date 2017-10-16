@@ -12,7 +12,6 @@ from psychopy import core, event, logging, visual
 from settings import *
 from src.experiment import *
 from src.fileIO import read_conly, write_csv
-from src.ynicmr import save_vol_time
 
 INFO = {
     'Experiment' : 'mindwandering_msc', # compulsory
