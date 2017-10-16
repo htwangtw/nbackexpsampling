@@ -257,6 +257,10 @@ class instructions(object):
                 ) #object to display instructions
 
     def parse_inst(self):
+        '''
+        I hard coded the part with text needs changing.
+        Will need to change this in the future
+        '''
         self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{COLOR_REC}', self.settings['rec_color'].upper())
         self.instruction_txt[2] = self.instruction_txt[2].replace(
@@ -298,62 +302,6 @@ class instructions(object):
             event.waitKeys(keyList=['5'])
         else: # not supported
             raise Exception('Unknown environment setting')
-
-
-def display_instructions(window, settings, txt_color='black', skip=False):
-    '''
-    Show instruction and get trigger/wait screen
-    This function needs refactoring
-    '''
-    def _instruction_ver(ver, text):
-        text = text.replace('{COLOR_REC}', ver['rec_color'].upper())
-        text = text.replace('{COLOR_LOC}', ver['loc_color'].upper())
-        text = text.replace('{KEY_REC_0}', ver['rec_keys'][0].upper())
-        text = text.replace('{KEY_REC_1}', ver['rec_keys'][1].upper())
-        text = text.replace('{KEY_LOC_0}', ver['loc_keys'][0].upper())
-        text = text.replace('{KEY_LOC_1}', ver['loc_keys'][1].upper())
-        return text
-
-    env = settings['env']
-    instruction_txt = load_instruction(
-            os.path.abspath('./instructions/exp_instr.txt'))
-    ready_txt = load_instruction(
-            os.path.abspath('./instructions/wait_trigger.txt'))[0]
-
-    instruction_stimuli = visual.TextStim(
-        window, text='default text', font=sans,
-        name='instruction',
-        pos=[-50,0], height=30, wrapWidth=1100,
-        color=txt_color,
-        ) #object to display instructions
-
-    instruction_txt[2] = _instruction_ver(settings, instruction_txt[2])
-
-    #instructions screen
-    if skip:
-        pass
-    else:
-        for i, cur in enumerate(instruction_txt):
-            instruction_stimuli.setText(cur)
-            instruction_stimuli.draw()
-            window.flip()
-            if i==0:
-                core.wait(uniform(1.3,1.75))
-            else:
-                # need a self-pace version for MR
-                event.waitKeys(keyList=['return'])
-
-    # wait for trigger; or just wait
-    instruction_stimuli.setText(ready_txt)
-    instruction_stimuli.draw()
-
-    if env == 'lab':
-        window.flip()
-        core.wait(uniform(1.3,1.75))
-    elif env == 'mri':
-        event.waitKeys(keyList=['5'])
-    else: # not supported
-        raise Exception('Unknown environment setting')
 
 def subject_info(experiment_info):
     '''
