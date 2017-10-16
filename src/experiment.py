@@ -43,7 +43,7 @@ class fixation_cross(object):
             vertices=[(-10, 2.5), (-10, -2.5), (10,-2.5), (10, 2.5)])
 
     def set_trial(self, trial):
-        self.duration = trial['fixT']
+        self.duration = trial['fix_duration']
         self.line.fillColor = 'black'
         self.dash.fillColor = 'black'
 
@@ -76,7 +76,7 @@ class Text(object):
         self.duration = None
 
     def set_trial(self, trial):
-        self.duration = trial['stimT']
+        self.duration = trial['stim_duration']
 
     def show(self, clock):
         self.text.draw()
@@ -130,7 +130,7 @@ class responsescreen(object):
         self.keyans = []
 
     def set_trial(self, trial):
-        self.duration = trial['stimT']
+        self.duration = trial['stim_duration']
         self.ans = trial['Ans']
         # change color of self.line and self.dash base on go trial task
         if 'NoGo'in trial['TrialType']:
@@ -202,7 +202,9 @@ class responsescreen(object):
             KeyResp, Resp = 'None', 'None'
 
         # get correct trials
-        if self.ans == Resp:
+        if self.ans == 'NA':
+            correct = None
+        elif self.ans == Resp:
             correct = 1
         else:
             correct = 0
@@ -313,7 +315,7 @@ def subject_info(experiment_info):
 
     experiment_info['Date'] = data.getDateStr()
 
-    file_root = ('_').join([experiment_info['Subject'], experiment_info['Session'],
+    file_root = ('_').join([experiment_info['Subject'], experiment_info['Run'],
                             experiment_info['Experiment'], experiment_info['Date']])
 
     experiment_info['DataFile'] = 'data' + os.path.sep + file_root + '.csv'

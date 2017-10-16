@@ -16,7 +16,7 @@ from src.fileIO import read_conly, write_csv
 INFO = {
     'Experiment' : 'mindwandering_msc', # compulsory
     'Subject': 'R0001_001', # compulsory
-    'Session': '1', # compulsory
+    'Run': '1', # compulsory
     'Version': ['A', 'B'], # counterbalance the fixation cross
     'N-back': ['0', '1'], # start the task with 1-back or 0-back
     'Environment': ['mri', 'lab']
@@ -35,7 +35,7 @@ settings = get_settings(
 trial_generator, headers =  get_trial_generator(experiment_info['N-back'])
 
 # skip instruction expect run 1
-if experiment_info['Session'] == '1':
+if experiment_info['Run'] == '1':
     skip_instruction = False
 else:
     skip_instruction = True
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             instruction_txt=instr_txt, ready_txt=ready_txt)
 
     # skip instruction except run 1
-    if experiment_info['Session'] == '1':
+    if experiment_info['Run'] == '1':
         instructions.show()
     else:
         pass
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     # dummy volumes
     if experiment_info['Environment'] is 'mri':
-        fixation.set_trial({'fixT': tr * dummy_vol})
+        fixation.set_trial({'fix_duration': tr * dummy_vol})
         t = fixation.show(timer)
         print('dummy volume start', t)
 
@@ -104,8 +104,8 @@ if __name__ == "__main__":
         # show stimulus screen and catch response
         stim_t, KeyResp, Resp, KeyPressTime, respRT, correct = stim.show(timer)
         # post response fixation
-        if respRT and trial['stimT'] - respRT > 0:
-            fixation.duration = trial['stimT'] - respRT
+        if respRT and trial['stim_duration'] - respRT > 0:
+            fixation.duration = trial['stim_duration'] - respRT
             _ = fixation.show(timer)
 
         # dump information to trial
@@ -116,7 +116,7 @@ if __name__ == "__main__":
         trial['respCORR'] = correct
         trial['respRT'] = respRT
         trial['IDNO'] = experiment_info['Subject']
-        trial['Session'] = experiment_info['Session']
+        trial['Run'] = experiment_info['Run']
 
         # write to csv
         write_csv(experiment_info['DataFile'], headers, trial)

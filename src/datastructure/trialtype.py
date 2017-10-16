@@ -55,13 +55,13 @@ class NoGo(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
         dict_row['stimPicMid'] = None
-        dict_row['Ans'] = 'None'
+        dict_row['Ans'] = 'NA'
 
         yield dict_row, self.trial_spec['trial_t_total']
 
@@ -109,8 +109,8 @@ class ZeroBack(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
@@ -164,8 +164,8 @@ class OneBack(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = '?'
         dict_row['stimPicRight'] = '?'
@@ -221,8 +221,8 @@ class ZeroBackRecog(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
@@ -277,8 +277,8 @@ class OneBackRecog(object):
 
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = '?'
         dict_row['stimPicRight'] = '?'
@@ -334,8 +334,8 @@ class Recognition(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         # decide to preserve left or right
         for f1 in stimulus_generator.feature1:
@@ -401,8 +401,8 @@ class ZeroBack_feature(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = item_list[0]
         dict_row['stimPicRight'] = item_list[1]
@@ -469,8 +469,8 @@ class OneBack_feature(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
         dict_row['stimPicLeft'] = '?'
         dict_row['stimPicRight'] = '?'
@@ -540,8 +540,8 @@ class Recognition_feature(object):
         dict_row['Condition'] = None
 
         dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fixT'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
-        dict_row['stimT'] =self.trial_spec['trial_t_total'] - dict_row['fixT']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
         # decide to preserve left or right
         for f1 in stimulus_generator.feature1:
             if f1 not in [last_trial['stimPicLeft'][0], last_trial['stimPicRight'][0]]:
