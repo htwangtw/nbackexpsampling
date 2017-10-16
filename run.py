@@ -82,13 +82,16 @@ if __name__ == "__main__":
     instructions.waitTrigger()
     # get a global clock
     timer = core.Clock()
-    
+
     # dummy volumes
     if experiment_info['Environment'] is 'mri':
         fixation.set_trial({'fixT': tr * dummy_vol})
         t = fixation.show(timer)
         print('dummy volume start', t)
-        
+
+    # get a global clock
+    timer = core.Clock()
+
     for trial in Experiment.trials:
         # parse tuples to proper file names
         trial = parse_stimulus_name(trial)
