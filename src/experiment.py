@@ -257,17 +257,17 @@ class instructions(object):
                 ) #object to display instructions
 
     def parse_inst(self):
-        self.instruction_txt[2] = self.instruction_txt[1].replace(
+        self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{COLOR_REC}', self.settings['rec_color'].upper())
-        self.instruction_txt[2] = self.instruction_txt[1].replace(
+        self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{COLOR_LOC}', self.settings['loc_color'].upper())
-        self.instruction_txt[2] = self.instruction_txt[1].replace(
+        self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{KEY_REC_0}', self.settings['rec_keys'][0].upper())
-        self.instruction_txt[2] = self.instruction_txt[1].replace(
+        self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{KEY_REC_1}', self.settings['rec_keys'][1].upper())
-        self.instruction_txt[2] = self.instruction_txt[1].replace(
+        self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{KEY_LOC_0}', self.settings['loc_keys'][0].upper())
-        self.instruction_txt[2] = self.instruction_txt[1].replace(
+        self.instruction_txt[2] = self.instruction_txt[2].replace(
                 '{KEY_LOC_1}', self.settings['loc_keys'][1].upper())
 
         return self.instruction_txt
@@ -327,7 +327,7 @@ def display_instructions(window, settings, txt_color='black', skip=False):
         color=txt_color,
         ) #object to display instructions
 
-    instruction_txt[1] = _instruction_ver(settings, instruction_txt[1])
+    instruction_txt[2] = _instruction_ver(settings, instruction_txt[2])
 
     #instructions screen
     if skip:
