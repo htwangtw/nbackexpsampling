@@ -1,3 +1,2 @@
-The session is now finished. Please call the experimenter or exit the experiment.
-
-The session will close automatically.
+The run is now finished. 
+Please remain still in the scanner.

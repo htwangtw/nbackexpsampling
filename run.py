@@ -74,7 +74,7 @@ if __name__ == "__main__":
     stimulus = responsescreen(window=Experiment.window, version=settings)
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
-    end_msg = Text(window=Experiment.window, text=endtxt, color='black')
+    end_msg = visual.TextStim(window=Experiment.window, text=endtxt, color='black')
 
     # generate trials
     Experiment.trials= next(trial_generator)
@@ -127,8 +127,9 @@ if __name__ == "__main__":
         respRT = None
 
     # ending message
-    end_msg.duration = 2
-    end_msg.show(timer)
+    end_msg.draw()
+    Experiment.window.flip()
+    event.waitKeys('return')
 
     logging.flush()
     # change output files to read only
