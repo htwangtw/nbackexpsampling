@@ -110,7 +110,7 @@ def write_csv(fileName, list_headers, thisTrial):
             dw = csv.DictWriter(f, fieldnames=fieldnames)
             dw.writerow(thisTrial)
 
-def read_conly(path):
+def read_only(path):
     '''
     change the mode to read only
     '''

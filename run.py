@@ -11,7 +11,7 @@ from psychopy import core, event, logging, visual
 
 from settings import *
 from src.experiment import *
-from src.fileIO import read_conly, write_csv
+from src.fileIO import read_only, write_csv
 
 INFO = {
     'Experiment': 'mindwandering_msc',  # compulsory
@@ -136,8 +136,8 @@ if __name__ == "__main__":
 
     logging.flush()
     # change output files to read only
-    read_conly(experiment_info['DataFile'])
-    read_conly(experiment_info['LogFile'])
+    read_only(experiment_info['DataFile'])
+    read_only(experiment_info['LogFile'])
     # quit
     Experiment.window.close()
     core.quit()
