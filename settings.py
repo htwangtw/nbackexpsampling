@@ -4,7 +4,7 @@
 Define global and environment-specific settings here.
 '''
 # there's a bug in datastructure so don't change the next two lines
-BLOCK_TIME = 4.5 
+BLOCK_TIME = 4.5
 BLOCK_GO_N = 18
 
 # set the two features we used for making the stimulus
@@ -93,7 +93,9 @@ LAB = {
 MRI = {
     'env': 'mri',
     'window_size': 'full_screen',
-    'input_method': 'serial'
+    'input_method': 'serial',
+    'logging_level': logging.EXP,
+    'test': False,
 }
 
 # experiment specific vesion related setting
@@ -187,6 +189,8 @@ def get_settings(env, ver, test=False):
 
     if test:
         settings.update(TEST)
+    elif env == 'mri':
+        pass
     else:
         settings.update(PRODUCTION)
 
