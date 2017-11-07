@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # ending message
     end_msg.draw()
     Experiment.window.flip()
-    event.waitKeys('return')
+    event.waitKeys(keyList=['return'])
 
     logging.flush()
     # change output files to read only
