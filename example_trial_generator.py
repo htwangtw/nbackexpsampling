@@ -27,7 +27,6 @@ stimulus_dir = './stimuli/'
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
 block = '0'
-
 # now define the generators
 # create experiment parameters
 # a 1.5 min block can have 6 catch trials max

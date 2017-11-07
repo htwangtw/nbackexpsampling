@@ -14,7 +14,7 @@ from src.experiment import *
 from src.fileIO import read_only, write_csv
 
 INFO = {
-    'Experiment': 'mindwandering_msc',  # compulsory
+    'Experiment': 'nback_mpsych',  # compulsory
     'Subject': 'R0001_001',  # compulsory
     'Run': '1',  # compulsory
     'Version': ['A', 'B'],  # counterbalance the fixation cross
