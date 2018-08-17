@@ -49,7 +49,7 @@ class ExpSample(object):
 
         '''
         dict_row = {key: None for key in self.lst_header}
-        item_list = next(stimulus_generator.generate())
+        item = next(stimulus_generator.generate())
 
         dict_row['TrialIndex'] = None
         dict_row['Condition'] = None
@@ -62,7 +62,7 @@ class ExpSample(object):
         dict_row['stimPicRight'] = None
         dict_row['Ans'] = None
 
-        dict_row['stimPicMid'] = item_list
+        dict_row['stimPicMid'] = item
 
         yield dict_row,self.trial_spec['trial_t_total']
 
