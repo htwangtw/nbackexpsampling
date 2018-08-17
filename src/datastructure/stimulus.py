@@ -7,10 +7,35 @@ stimulus feature generator
 from random import shuffle, randint
 from itertools import product
 
+class stimulus_ExpSample(object):
+    '''
+    Incomplete
+
+    experience sampling stimulus generator
+
+    save features and generate stimuli
+    feature: list, dictionaries of questions
+
+    '''
+    def __init__(self, feature):
+        self.stimuli = feature
+        # here shuffle the questions but hold the first question in place
+
+    def generate(self):
+        '''
+        Incomplete
+
+        yield self.stimuli
+
+        '''
+
+        yield self.stimuli
+
+
 class stimulus_twofeat(object):
     '''
     double feature stimulus generator
-    
+
     save features and genenrate stimuli pair
 
     feature1, feature2 : list, features of stimulus
@@ -36,7 +61,7 @@ class stimulus_twofeat_mix(object):
     '''
     double feature stimulus generator with mixed congurency
     The stimulis pair can share one feature or no feature.
-    
+
     save features and genenrate stimuli pair
 
     feature1, feature2 : list, features of stimulus
@@ -82,15 +107,15 @@ class stimulus_onefeat(object):
 def tup2str(dir_path, tuple_stim, filesuffix):
     '''
     trun tuple to a string (filename)
-    the filename must look like: 
+    the filename must look like:
         feature1_feature2.png
 
     dir_path: str
         example: './stimulus/'
-    
+
     tuple_stim: tuple
         stimulus, ('feature1', 'feature2')
-    
+
     filesuffix: str
         expample '.png'
 

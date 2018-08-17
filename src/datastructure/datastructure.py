@@ -164,7 +164,7 @@ class trial_builder(object):
         block: None, '0', '1'
             no sequence assigned, starting from 1 back, starting from 0 back
         return
-            condition, shuffled: lst
+            conditions, shuffled: lst
         '''
         if block == '1':
             # use Ordereddict form python in-built library `collections`
@@ -174,7 +174,8 @@ class trial_builder(object):
             conditions = sorted(conditions,
             reverse=True, key=lambda t: t['Condition'])
         else:
-            shuffle(conditons)
+            pass # low priority to-do: shuffle the conditions
+
         return conditions
 
     def block_trials(self, trial_finder, block, trial_headers):
@@ -196,10 +197,10 @@ class trial_builder(object):
         trial_NoGo = trial_finder.get(trial_type='NoGo')
         trial_NoGo.lst_header = trial_headers
 
-        trial_Go1 = trial_finder.get(trial_type=block['GoTrial_1'])
+        trial_Go1 = trial_finder.get(trial_type=block['GoTrial1'])
         trial_Go1.lst_header = trial_headers
 
-        trial_Go2 = trial_finder.get(trial_type=block['GoTrial_2'])
+        trial_Go2 = trial_finder.get(trial_type=block['GoTrial2'])
         trial_Go2.lst_header = trial_headers
 
         trial_Go = [trial_Go1, trial_Go2]
@@ -241,6 +242,8 @@ class trial_builder(object):
 
     def build(self, experiment_parameters, trial_finder, stimulus_generator, block):
         '''
+        This feature doesn't integrate experience sampling for now
+
         now let's build the trial generator
 
         experiment_parameters: obj
@@ -287,12 +290,14 @@ class trial_builder(object):
                                 last_trial=self.last_trial))
                             self.task_t -= t
                             self.save_trial(cur_trial, block['Condition'])
+
                         # generate the go trial
                         # go trial: type 1 or type 2
                         # see which go trial type were all used
+                        # need to integrate experience sampling here
                         use_go = [i for i, e in enumerate(self.go_n) if e > 0]
                         if use_go:
-                            # select a random one from the avalible ones
+                            # select a random one from the available ones
                             idx = choice(use_go)
                         cur_trial, t = next(trial_Go[idx].generate_trial(
                             stimulus_generator=stimulus_generator,

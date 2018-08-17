@@ -12,6 +12,60 @@ from random import choice, shuffle, uniform
 from ..fileIO import create_headers
 
 
+class ExpSample(object):
+    '''
+    generate a experience sampling trial detail
+
+    trial_spec: dict
+        trial specification
+
+    lst_header: list
+        headers for generating dictionary to store trial details
+
+    '''
+    def __init__(self, trial_spec, lst_header):
+        self.trial_spec = trial_spec
+        self.lst_header = lst_header
+
+    def generate_trial(self, stimulus_generator, last_trial):
+        '''
+        a generater that creates trials
+
+        stimulus_generator: generator
+            stimulus generator
+
+        last_trial: dict
+            the previous trial; some trials need this information
+            if it's a experience sampling question,
+            zero-back or no-go trial, None type is accepted
+
+        output
+
+        dict_row: dict
+            a trail in dictionary
+
+        self.trial_spec['trial_t_total']: float
+            total time of this trial, for counter
+
+        '''
+        dict_row = {key: None for key in self.lst_header}
+        item_list = next(stimulus_generator.generate())
+
+        dict_row['TrialIndex'] = None
+        dict_row['Condition'] = None
+
+        dict_row['TrialType'] = self.trial_spec['trial_type']
+        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
+        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
+
+        dict_row['stimPicLeft'] = None
+        dict_row['stimPicRight'] = None
+        dict_row['Ans'] = None
+
+        dict_row['stimPicMid'] = item_list
+
+        yield dict_row,self.trial_spec['trial_t_total']
+
 class NoGo(object):
     '''
     generate a one back trial detail

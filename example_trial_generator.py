@@ -3,7 +3,7 @@ This is an example of how to generate a trial list
 all the modules have documentation to some extend
 find them by typing ?modulename to the console
 
-set working directory to the task folder before runing this example
+set working directory to the task folder before running this example
 
 H.T. Wang
 '''
@@ -19,20 +19,30 @@ from src.datastructure import trialtype
 shape = ['square', 'triangle', 'circle']
 
 # locate path of experiment specification related files
-condition_path = './parameters/ConditionsSpecifications.csv'
+
+# ConditionsSpecifications.csv:
+#        original design
+# ConditionsSpecifications_ES.csv:
+#       0 back condition,
+#       the experience sampling part has not been implemented yet
+#condition_path = './parameters/ConditionsSpecifications.csv'
+condition_path = './parameters/ConditionsSpecifications_ES.csv'
+
 trialheader_path = './parameters/TrialHeaders.csv'
 trialspec_path = './parameters/TrialSpecifications.csv'
 stimulus_dir = './stimuli/'
 
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
-block = '0'
+block = None # accept values: '0', '1', None
 # now define the generators
 # create experiment parameters
 # a 1.5 min block can have 6 catch trials max
-parameters = experiment_parameters(block_length=4.5, block_go_n=18, runs=1)
+# runs - minimum 1;
+parameters = experiment_parameters(block_length=4.5, block_go_n=18, runs=2)
 parameters.load_conditions(condition_path)
 parameters.load_header(trialheader_path)
+
 
 # create trial finder
 find_trial = trial_finder(trialspec_path=trialspec_path, trialspec_col=trialspec_col)
@@ -69,4 +79,9 @@ for trial in trials:
     # the stimulus is saved as a tuple in the dictionar, use tup2str function in module stimulus
     # uncomment the following lines to compare theout put
     #
-     write_csv(fileName='../example.csv', list_headers=parameters.headers, thisTrial=trial)
+     write_csv(fileName='example_run1.csv', list_headers=parameters.headers, thisTrial=trial)
+
+# to get run two:
+trials = next(trial_generator)
+for trial in trials:
+     write_csv(fileName='example_run2.csv', list_headers=parameters.headers, thisTrial=trial)
