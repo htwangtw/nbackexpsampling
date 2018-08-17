@@ -211,10 +211,75 @@ class responsescreen(object):
 
         return start_trial, KeyResp, Resp, KeyPressTime, respRT, correct
 
-# class question(object):
-#     '''
-#     collect mind wandering report
-#     '''
+class Question(object):
+    '''
+    collect mind wandering report
+    '''
+    def __init__(self, window, questions, color):
+        '''Initialize a question stimulus.
+        Args:
+        window - The window object
+        questions - a list of dictionaries
+        keys - list of keys to press to continue to next stimulus. If None,
+                will automatically go to the next stimulus.
+        Additional args and kwargs are passed to the visual.TextStim
+        constructor.
+        '''
+        self.window = window
+        self.description = visual.TextStim(self.window, text=None, height=34,
+        wrapWidth=1100, color=color, font=sans)
+        self.scale_h = visual.TextStim(self.window, text=None, height=34,
+        wrapWidth=1100, pos=[50,-50],color=color, font=sans)
+        self.scale_l = visual.TextStim(self.window, text=None, height=34,
+        wrapWidth=1100, pos=[-50,-50],color=color, font=sans)
+        self.questions = questions
+        self.rating = visual.RatingScale(self.window, low=1, high=10, markerStart=5,
+                precision=10, tickMarks=[1, 10],
+                leftKeys='1', rightKeys='2', acceptKeys='4')
+
+    def set(self, trial):
+        self.description.setText(trial['Item'])
+        self.scale_h.setText(trial['Min_Scale'])
+        self.scale_l.setText(trial['Max_Scale'])
+
+    def show(self, clock):
+        keyState=key.KeyStateHandler()
+        self.window.winHandle.push_handlers(keyState)
+        self.description.draw()
+        self.scale_h.draw()
+        self.scale_l.draw()
+        self.rating.draw()
+        self.window.flip()
+        start_trial = clock.getTime()
+
+        pos = self.rating.markerStart
+        inc = 0.1
+
+        while self.rating.noResponse:
+            if event.getKeys(keyList=['escape']):
+                print('user quit')
+                core.quit()
+
+            if keyState[key._1] is True:
+                pos -= inc
+            elif keyState[key._2] is True:
+                pos += inc
+
+            if pos > 9:
+                pos = 9
+            elif pos < 0:
+                pos = 0
+
+            self.rating.setMarkerPos(pos)
+            self.description.draw()
+            self.rating.draw()
+            self.window.flip()
+
+        score = self.rating.getRating()
+        rt = self.rating.getRT()
+        self.rating.reset()
+        return start_trial, score, rt
+
 
 def get_keyboard(timer, respkeylist, keyans):
     '''
