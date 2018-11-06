@@ -4,6 +4,9 @@
 experiemnt stimulus here
 '''
 from psychopy import core, data, gui, visual, event, logging
+from pyglet.window import key
+
+
 import os
 from src.fileIO import *
 from random import uniform, shuffle
@@ -136,6 +139,7 @@ class responsescreen(object):
         if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
+            
         elif 'Recog' in trial['TrialType']:
             self.line.fillColor = self.version['rec_color']
             self.dash.fillColor = self.version['rec_color']
@@ -143,11 +147,19 @@ class responsescreen(object):
             self.keyans = self.version['rec_keyans']
 
         elif 'Back' in trial['TrialType']:
-            self.line.fillColor = self.version['loc_color']
-            self.dash.fillColor = self.version['loc_color']
+            if 'Zero' in trial['TrialType']:
+                self.line.fillColor = self.version['0_back_color']
+                self.dash.fillColor = self.version['0_back_color']
+            elif 'One' in trial['TrialType']:
+                self.line.fillColor = self.version['1_back_color']
+                self.dash.fillColor = self.version['1_back_color']
+            else:
+                self.line.fillColor = self.version['loc_color']
+                self.dash.fillColor = self.version['loc_color']
+            
             self.keylist = self.version['loc_keys']
             self.keyans = self.version['loc_keyans']
-
+                        
         if '?' == trial['stimPicLeft']:
             self.present_left = self.quest_left
             self.present_right = self.quest_right
@@ -228,26 +240,33 @@ class Question(object):
         self.window = window
         self.description = visual.TextStim(self.window, text=None, height=34,
         wrapWidth=1100, color=color, font=sans)
-        self.scale_h = visual.TextStim(self.window, text=None, height=34,
-        wrapWidth=1100, pos=[50,-50],color=color, font=sans)
         self.scale_l = visual.TextStim(self.window, text=None, height=34,
-        wrapWidth=1100, pos=[-50,-50],color=color, font=sans)
+        wrapWidth=1100, pos=[-300,-150],color=color, font=sans)
+        self.scale_h = visual.TextStim(self.window, text=None, height=34,
+        wrapWidth=1100, pos=[300,-150],color=color, font=sans)
         self.questions = questions
         self.rating = visual.RatingScale(self.window, low=1, high=10, markerStart=5,
                 precision=10, tickMarks=[1, 10],
                 leftKeys='1', rightKeys='2', acceptKeys='4')
 
     def set(self, trial):
-        self.description.setText(trial['Item'])
-        self.scale_h.setText(trial['Scale_low'])
-        self.scale_l.setText(trial['Scale_high'])
+        self.description.setText(trial['stimPicMid'])
+        self.scale_l.setText(trial['stimPicLeft'])
+        self.scale_h.setText(trial['stimPicRight'])
+        if trial['stim_duration']:
+            self.scale_max_time = trial['stim_duration']
+        else:
+            self.scale_max_time = 90
+
+
 
     def show(self, clock):
         keyState=key.KeyStateHandler()
         self.window.winHandle.push_handlers(keyState)
+        
         self.description.draw()
-        self.scale_h.draw()
         self.scale_l.draw()
+        self.scale_h.draw()
         self.rating.draw()
         self.window.flip()
         start_trial = clock.getTime()
@@ -255,7 +274,8 @@ class Question(object):
         pos = self.rating.markerStart
         inc = 0.1
 
-        while self.rating.noResponse:
+        while (self.rating.noResponse
+               and clock.getTime() - start_trial < self.scale_max_time):
             if event.getKeys(keyList=['escape']):
                 print('user quit')
                 core.quit()
@@ -272,6 +292,8 @@ class Question(object):
 
             self.rating.setMarkerPos(pos)
             self.description.draw()
+            self.scale_l.draw()
+            self.scale_h.draw()
             self.rating.draw()
             self.window.flip()
 
@@ -328,19 +350,24 @@ class instructions(object):
         I hard coded the part with text needs changing.
         Will need to change this in the future
         '''
-        self.instruction_txt[2] = self.instruction_txt[2].replace(
-                '{COLOR_REC}', self.settings['rec_color'].upper())
-        self.instruction_txt[2] = self.instruction_txt[2].replace(
-                '{COLOR_LOC}', self.settings['loc_color'].upper())
-        self.instruction_txt[2] = self.instruction_txt[2].replace(
-                '{KEY_REC_0}', self.settings['rec_keys'][0].upper())
-        self.instruction_txt[2] = self.instruction_txt[2].replace(
-                '{KEY_REC_1}', self.settings['rec_keys'][1].upper())
-        self.instruction_txt[2] = self.instruction_txt[2].replace(
-                '{KEY_LOC_0}', self.settings['loc_keys'][0].upper())
-        self.instruction_txt[2] = self.instruction_txt[2].replace(
-                '{KEY_LOC_1}', self.settings['loc_keys'][1].upper())
-
+#        self.instruction_txt[2] = self.instruction_txt[2].replace(
+#                '{COLOR_REC}', self.settings['rec_color'].upper())
+#        self.instruction_txt[2] = self.instruction_txt[2].replace(
+#                '{COLOR_LOC}', self.settings['loc_color'].upper())
+#        self.instruction_txt[2] = self.instruction_txt[2].replace(
+#                '{KEY_REC_0}', self.settings['rec_keys'][0].upper())
+#        self.instruction_txt[2] = self.instruction_txt[2].replace(
+#                '{KEY_REC_1}', self.settings['rec_keys'][1].upper())
+#        self.instruction_txt[2] = self.instruction_txt[2].replace(
+#                '{KEY_LOC_0}', self.settings['loc_keys'][0].upper())
+#        self.instruction_txt[2] = self.instruction_txt[2].replace(
+#                '{KEY_LOC_1}', self.settings['loc_keys'][1].upper())
+                
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{0_back_color}', self.settings['0_back_color'].upper())
+        
+        self.instruction_txt[1] = self.instruction_txt[1].replace(
+                '{1_back_color}', self.settings['1_back_color'].upper())
         return self.instruction_txt
 
     def show(self):

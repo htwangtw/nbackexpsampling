@@ -1,0 +1,34 @@
+Advance to instructions...
+#
+Welcome to our experiment.
+
+In it you will be asked to attend to pairs of different shapes divided by a vertical line in the middle of the screen.  
+You will only be required to keep your eyes in the centre of the screen and attend to the shapes most of the time.
+When a reaction is required, the vertical line will change colour. 
+
+The condition will switch between blocks. The two types of conditions are 0-back and 1-back. If the line is {0_back_color}, the trial is a 0-back block. If the line is {1_back_color}, the trial is a 1-back block.
+
+When an event occurs in a 0-back block, the screen displays a pair of shapes and a smaller target item in the middle.
+You answer according to the CURRENT screen.
+
+When an event occurs in a 1-back block, the screen displays a pair of "?" and a smaller target item in the middle.
+You answer according to the PREVIOUS screen.
+
+You are using key "1" and "2" to indicate LEFT or RIGHT.
+
+You should try to be as quick and accurate as possible.
+
+Press "1" to continue reading.
+#
+We are interested in the thoughts that you experienced during the rest period.
+A list of descriptions and a rating scale will be presented on the screen.
+Please use the four buttons to indicate how much each description reflects your experience.
+
+Press "1" to move the tick mark towards 1, indicates "not at all".
+Press "2" to move the tick mark towards 10, indicates "completely".
+Press "4" to confirm the rating.
+
+Please note that there are no right or wrong answers.
+Answer the questions as fast as possible.
+
+Press "1" to start the task.

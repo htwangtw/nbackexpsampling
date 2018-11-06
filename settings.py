@@ -16,27 +16,27 @@ condition_path = './parameters/ConditionsSpecifications_ES.csv'
 trialheader_path = './parameters/TrialHeaders.csv'
 trialspec_path = './parameters/TrialSpecifications.csv'
 stimulus_dir = './stimuli/'
+exp_questions_path = './stimuli/ES_questions.csv'
 
 # column name of trial type names in TrialSpecifications.csv
 trialspec_col = 'trial_type'
 
 # task instruction
-instr_txt = './instructions/exp_instr.txt'
+instr_txt = './instructions/exp_instr_es.txt'
 
 # wait trigger screen
 ready_txt = './instructions/wait_trigger.txt'
 
 
 # MRI related settings
-dummy_vol = 3
+dummy_vol = 0
 tr = 2
-slice_per_vol = 60
 
 from psychopy import logging
-from src.fileIO import write_csv, create_headers
-from src.datastructure.stimulus import stimulus_onefeat
+from src.fileIO import write_csv, create_headers, load_conditions_dict
+from src.datastructure.stimulus import stimulus_onefeat, stimulus_ExpSample
 from src.datastructure.datastructure import *
-from src.datastructure import trialtype
+from src.datastructure import trial_library
 
 # Base settings that apply to all environments.
 # These settings can be overwritten by any of the
@@ -128,15 +128,15 @@ VER_B_MRI = {
 EXP_SAMPLING_A = {
         '0_back_color': 'blue',
         '1_back_color': 'red',
-        'keys': ['1', '2'],
-        'keyans': ['left', 'right']
+        'loc_keys': ['1', '2'],
+        'loc_keyans': ['left', 'right']
         }
 
 EXP_SAMPLING_B = {
         '0_back_color': 'red',
         '1_back_color': 'blue',
-        'keys': ['1', '2'],
-        'keyans': ['left', 'right']
+        'loc_keys': ['1', '2'],
+        'loc_keyans': ['left', 'right']
         }
 
 def get_trial_generator(block):
@@ -149,17 +149,20 @@ def get_trial_generator(block):
             block_length=BLOCK_TIME, block_go_n=BLOCK_GO_N, runs=1)
     parameters.load_conditions(condition_path)
     parameters.load_header(trialheader_path)
+    questions, _ = load_conditions_dict('./stimuli/ES_questions.csv')
+
 
     # create trial finder
     find_trial = trial_finder(trialspec_path=trialspec_path, trialspec_col=trialspec_col)
 
     # create stimulus generators
     # stimulus_generator = stimulus_twofeat(feature1=shape, feature2=texture)
-    stimulus_generator = stimulus_onefeat(feature=shape)
+    stimulus_generator = stimulus_onefeat(features=shape)
+    exp_sample_generator = stimulus_ExpSample(questions)
     # now build the trials
     builder = trial_builder()
     # build the trial generator
-    trial_generator = builder.build(parameters, find_trial, stimulus_generator, block)
+    trial_generator = builder.build(parameters, find_trial, stimulus_generator, exp_sample_generator, block)
 
     return trial_generator, parameters.headers
 

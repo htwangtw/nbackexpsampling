@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
     stimulus = responsescreen(window=Experiment.window, version=settings)
-    question = Question(window=Experiment.window, questions=questions, color='white')
+    question = Question(window=Experiment.window, questions=None, color='white')
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = visual.TextStim(Experiment.window, text=endtxt, color='black',
@@ -101,15 +101,15 @@ if __name__ == "__main__":
         trial = parse_stimulus_name(trial)
         # prepare fixation cross and stimulus display
         fixation.set_trial(trial)
-        stim = get_stim_screen(trial, switch, stimulus)
-        # show fixation
         fix_t = fixation.show(timer)
-
+        print(trial['TrialType'])
+        
         if trial['TrialType'] == 'ExpSample':
             question.set(trial)
             start_stim, Resp, rt = question.show(timer)
         else:
             # show stimulus screen and catch response
+            stim = get_stim_screen(trial, switch, stimulus)
             stim_t, KeyResp, Resp, KeyPressTime, respRT, correct = stim.show(timer)
 
         # post response fixation
