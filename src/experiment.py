@@ -239,8 +239,8 @@ class Question(object):
 
     def set(self, trial):
         self.description.setText(trial['Item'])
-        self.scale_h.setText(trial['Min_Scale'])
-        self.scale_l.setText(trial['Max_Scale'])
+        self.scale_h.setText(trial['Scale_low'])
+        self.scale_l.setText(trial['Scale_high'])
 
     def show(self, clock):
         keyState=key.KeyStateHandler()

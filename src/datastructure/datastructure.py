@@ -8,8 +8,8 @@ import codecs
 import csv
 from random import randrange, shuffle, randint, choice
 
-from . import trialtype
-from .trialtype import *
+from . import trial_library
+from .trial_library import *
 from ..fileIO import *
 
 
@@ -68,8 +68,8 @@ class experiment_parameters(object):
         a list of counters for the number of catch trial type 1 to n
        '''
         time = self.block_length * 60
-        trialtype_n = len(self.conditions[0]) - 1
-        go_n = [self.block_go_n / trialtype_n] * trialtype_n
+        trial_library_n = len(self.conditions[0]) - 1
+        go_n = [self.block_go_n / trial_library_n] * trial_library_n
         return time, go_n
 
 
@@ -98,6 +98,7 @@ class trial_finder(object):
             reader = csv.DictReader(f)
             #loop through csv list
             for row in reader:
+
                 # first convert strings to float
                 for item in row.keys():
                     row[item] = str2float(row[item])
@@ -105,8 +106,7 @@ class trial_finder(object):
                 # if current rows trial type is equal to input, print that row
                 if trial_type == row[self.trialspec_col]:
                     trial_spec = row
-
-                    trial_mod = getattr(trialtype, trial_type)
+                    trial_mod = getattr(trial_library, trial_type)
                     return trial_mod(trial_spec=trial_spec, lst_header=None)
 
                 else:
@@ -161,8 +161,8 @@ class trial_builder(object):
             the csv file entries should not use numbers (i.e.1 and 0)
             otherwise the behaviour will not work as expected
 
-        block: None, '0', '1'
-            no sequence assigned, starting from 1 back, starting from 0 back
+        block: '0', '1'
+            starting from 1 back, starting from 0 back
         return
             conditions, shuffled: lst
         '''
@@ -240,7 +240,8 @@ class trial_builder(object):
         self.dict_trials.append(cur_trial)
         self.last_trial = cur_trial
 
-    def build(self, experiment_parameters, trial_finder, stimulus_generator, block):
+    def build(self, experiment_parameters, trial_finder, \
+              stimulus_generator, expsampling_generator, block):
         '''
         This feature doesn't integrate experience sampling for now
 
@@ -271,13 +272,13 @@ class trial_builder(object):
             init_task_t, init_go_n = experiment_parameters.create_counter()
 
             for block in blocks:
-                self.initialise(init_task_t, [9, 9]) # HW- hard coding go_n this for now
+                self.initialise(init_task_t, [8, 8]) # HW- hard coding go_n this for now
 
                 # get the specific go trials according to the block you are in
                 trial_NoGo, trial_Go = self.block_trials(
                         trial_finder, block, experiment_parameters.headers)
                 self.trial_index = trial_idx_tmp
-                print self.trial_index
+
                 while self.task_t != 0: # start counting
                     for i in range(experiment_parameters.block_go_n):
                         # get no-go trial number
@@ -299,12 +300,24 @@ class trial_builder(object):
                         if use_go:
                             # select a random one from the available ones
                             idx = choice(use_go)
-                        cur_trial, t = next(trial_Go[idx].generate_trial(
+
+
+                        if trial_Go[idx].__class__.__name__=='ExpSample':
+                            # if it's experience sampling
+                            cur_trial, t = next(trial_Go[idx].generate_trial(
+                            stimulus_generator=expsampling_generator,
+                            last_trial=self.last_trial)) # n-back
+                            for trial in cur_trial:
+                                self.task_t -= t[0]
+                                self.save_trial(trial, block['Condition'])
+                        else:
+                            cur_trial, t = next(trial_Go[idx].generate_trial(
                             stimulus_generator=stimulus_generator,
                             last_trial=self.last_trial)) # n-back
-                        self.task_t -= t
+
+                            self.task_t -= t
+                            self.save_trial(cur_trial, block['Condition'])
                         self.go_n[idx] -= 1
-                        self.save_trial(cur_trial, block['Condition'])
 
                     # add 1~ 2 no-go trials and then a switch screen to end this block
                     for k in range(randrange(1, 3, 1)):
@@ -325,11 +338,11 @@ class trial_builder(object):
                     self.save_trial(cur_trial, 'Switch')
                     if self.task_t != 0:
                         # if this list of trials is not good for the block, restart
-                        self.initialise(init_task_t, [9, 9])# HW- hard coding go_n this for now
+                        self.initialise(init_task_t, [8, 8])# HW- hard coding go_n this for now
                         self.trial_index = trial_idx_tmp
                     else:
                         # if it's good save this block to the run
-                        print 'save this block'
+                        print('save this block')
                         run += self.dict_trials
                         trial_idx_tmp = self.trial_index
             yield run

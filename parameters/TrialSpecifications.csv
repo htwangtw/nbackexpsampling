@@ -1,11 +1,11 @@
-trial+AF8-type,fix+AF8-t+AF8-min,fix+AF8-t+AF8-max,stim+AF8-t+AF8-min,stim+AF8-t+AF8-max,trial+AF8-t+AF8-total,trial+AF8-n+AF8-min,trial+AF8-n+AF8-max
+trial_type,fix_t_min,fix_t_max,stim_t_min,stim_t_max,trial_t_total,trial_n_min,trial_n_max
 OneBack,1,2.5,3.5,5,6,1,1
 ZeroBack,1,2.5,3.5,5,6,1,1
 Recognition,1,2.5,3.5,5,6,1,1
 NoGo,1.5,2.5,0.5,1.5,3,2,5
-ExpSample,0.5,0.5,2,2,2.5,13,13
-OneBack+AF8-feature,1,2.5,3.5,5,6,1,1
-ZeroBack+AF8-feature,1,2.5,3.5,5,6,1,1
-Recognition+AF8-feature,1,2.5,3.5,5,6,1,1
+ExpSample,0.5,0.5,4,4,4.5,13,13
+OneBack_feature,1,2.5,3.5,5,6,1,1
+ZeroBack_feature,1,2.5,3.5,5,6,1,1
+Recognition_feature,1,2.5,3.5,5,6,1,1
 OneBackRecog,1,2.5,3.5,5,6,1,1
 ZeroBackRecog,1,2.5,3.5,5,6,1,1

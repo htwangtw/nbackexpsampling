@@ -17,7 +17,7 @@ INFO = {
     'Experiment': 'nback_mpsych',  # compulsory
     'Subject': 'R0001_001',  # compulsory
     'Run': '1',  # compulsory
-    'Version': ['A', 'B'],  # counterbalance the fixation cross
+    'Version': ['A', 'B'],  # counterbalance the fixation color
     'N-back': ['0', '1'],  # start the task with 1-back or 0-back
     'Environment': ['mri', 'lab']
     }
@@ -74,6 +74,7 @@ if __name__ == "__main__":
     # create display screens
     fixation = fixation_cross(window=Experiment.window, color='black')
     stimulus = responsescreen(window=Experiment.window, version=settings)
+    question = Question(window=Experiment.window, questions=questions, color='white')
     switch = Text(window=Experiment.window, text='Switch', color='black')
     endtxt = open('./instructions/end_instr.txt', 'r').read().split('#\n')[0]
     end_msg = visual.TextStim(Experiment.window, text=endtxt, color='black',
@@ -104,8 +105,13 @@ if __name__ == "__main__":
         # show fixation
         fix_t = fixation.show(timer)
 
-        # show stimulus screen and catch response
-        stim_t, KeyResp, Resp, KeyPressTime, respRT, correct = stim.show(timer)
+        if trial['TrialType'] == 'ExpSample':
+            question.set(trial)
+            start_stim, Resp, rt = question.show(timer)
+        else:
+            # show stimulus screen and catch response
+            stim_t, KeyResp, Resp, KeyPressTime, respRT, correct = stim.show(timer)
+
         # post response fixation
         if respRT and trial['stim_duration'] - respRT > 0:
             fixation.duration = trial['stim_duration'] - respRT

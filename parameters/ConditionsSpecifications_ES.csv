@@ -1,2 +1,3 @@
 Condition,GoTrial1,GoTrial2
-ZeroBack,ZeroBackRecog,ZeroBack
+ZeroBack,ZeroBack,ExpSample
+OneBack,OneBack,ExpSample

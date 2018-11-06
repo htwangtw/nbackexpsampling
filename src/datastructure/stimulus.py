@@ -7,29 +7,24 @@ stimulus feature generator
 from random import shuffle, randint
 from itertools import product
 
+
 class stimulus_ExpSample(object):
     '''
-    Incomplete
-
     experience sampling stimulus generator
-
     save features and generate stimuli
-    feature: list, dictionaries of questions
+
+    features: list, dictionaries of questions
 
     '''
-    def __init__(self, feature):
-        self.stimuli = feature
-        # here shuffle the questions but hold the first question in place
+    def __init__(self, features):
+        '''split questions into two sets'''
+        self.q_focus = [features[0]]  # the focus question stays at the top
+        self.q_others = features[1:]
 
     def generate(self):
-        '''
-        Incomplete
-
-        yield self.stimuli
-
-        '''
-
-        yield self.stimuli
+        '''yield self.stimuli'''
+        shuffle(self.q_others)
+        yield self.q_focus + self.q_others
 
 
 class stimulus_twofeat(object):
@@ -57,6 +52,7 @@ class stimulus_twofeat(object):
 
         yield [item_left, item_right]
 
+
 class stimulus_twofeat_mix(object):
     '''
     double feature stimulus generator with mixed congurency
@@ -83,16 +79,17 @@ class stimulus_twofeat_mix(object):
 
         yield [item_left, item_right]
 
+
 class stimulus_onefeat(object):
     '''
     single feature stimulus generator
 
     save features and genenrate stimuli
-    feature1, feature2 : list, features of stimuli
+    features: list, features of stimuli
 
     '''
-    def __init__(self, feature):
-        self.stimuli = feature
+    def __init__(self, features):
+        self.stimuli = features
 
     def generate(self):
         '''

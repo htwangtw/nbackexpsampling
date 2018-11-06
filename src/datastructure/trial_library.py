@@ -33,6 +33,9 @@ class ExpSample(object):
 
         stimulus_generator: generator
             stimulus generator
+            the output of the generator is a list of dictionaries
+            the header of the dictionaries are
+            "Item", "Question", "Scale_low", "Scale_high"
 
         last_trial: dict
             the previous trial; some trials need this information
@@ -41,30 +44,37 @@ class ExpSample(object):
 
         output
 
-        dict_row: dict
-            a trail in dictionary
+        dict_rows: a list of dict
+            a list of trials in dictionary
 
-        self.trial_spec['trial_t_total']: float
-            total time of this trial, for counter
+        trial_time: a list of float
+            total time of each trial, for counter
 
         '''
-        dict_row = {key: None for key in self.lst_header}
-        item = next(stimulus_generator.generate())
+        items = next(stimulus_generator.generate())
 
-        dict_row['TrialIndex'] = None
-        dict_row['Condition'] = None
+        dict_rows = []
+        trial_time = []
+        for item in items:
 
-        dict_row['TrialType'] = self.trial_spec['trial_type']
-        dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'],self.trial_spec['fix_t_max'])
-        dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
+            dict_row = {key: None for key in self.lst_header}
+            dict_row['TrialIndex'] = None
+            dict_row['Condition'] = None
 
-        dict_row['stimPicLeft'] = None
-        dict_row['stimPicRight'] = None
-        dict_row['Ans'] = None
+            dict_row['TrialType'] = self.trial_spec['trial_type']
+            dict_row['fix_duration'] = uniform(self.trial_spec['fix_t_min'], self.trial_spec['fix_t_max'])
+            dict_row['stim_duration'] =self.trial_spec['trial_t_total'] - dict_row['fix_duration']
 
-        dict_row['stimPicMid'] = item
+            dict_row['stimPicLeft'] = item['Scale_low']
+            dict_row['stimPicRight'] =  item['Scale_high']
+            dict_row['Ans'] = None
 
-        yield dict_row,self.trial_spec['trial_t_total']
+            dict_row['stimPicMid'] = item['Item']
+
+            dict_rows.append(dict_row)
+            trial_time.append(self.trial_spec['trial_t_total'])
+
+        yield dict_rows, trial_time
 
 class NoGo(object):
     '''

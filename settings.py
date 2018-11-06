@@ -4,15 +4,15 @@
 Define global and environment-specific settings here.
 '''
 # there's a bug in datastructure so don't change the next two lines
-BLOCK_TIME = 4.5
-BLOCK_GO_N = 18
+BLOCK_TIME = 12
+BLOCK_GO_N = 16
 
 # set the two features we used for making the stimulus
 shape = ['square', 'triangle', 'circle']
 # texture = ['dot', 'solid', 'stripe']
 
 # locate path of experiment specification related files
-condition_path = './parameters/ConditionsSpecifications.csv'
+condition_path = './parameters/ConditionsSpecifications_ES.csv'
 trialheader_path = './parameters/TrialHeaders.csv'
 trialspec_path = './parameters/TrialSpecifications.csv'
 stimulus_dir = './stimuli/'
@@ -125,6 +125,20 @@ VER_B_MRI = {
             'loc_keys': ['1', '2']
             }
 
+EXP_SAMPLING_A = {
+        '0_back_color': 'blue',
+        '1_back_color': 'red',
+        'keys': ['1', '2'],
+        'keyans': ['left', 'right']
+        }
+
+EXP_SAMPLING_B = {
+        '0_back_color': 'red',
+        '1_back_color': 'blue',
+        'keys': ['1', '2'],
+        'keyans': ['left', 'right']
+        }
+
 def get_trial_generator(block):
     '''
     return a trial generator and a list of data log headers
@@ -162,9 +176,9 @@ def get_settings(env, ver, test=False):
 
     # display and key press counter balancing
     if ver == 'A':
-        settings.update(VER_A)
+        settings.update(EXP_SAMPLING_A)
     elif ver == 'B':
-        settings.update(VER_B)
+        settings.update(EXP_SAMPLING_B)
     else:
         raise ValueError, 'Version "{0}" not supported.'.format(ver)
 
@@ -174,12 +188,7 @@ def get_settings(env, ver, test=False):
     #     settings.update(DEV)
     elif env == 'mri':
         settings.update(MRI)
-        if ver == 'A':
-            settings.update(VER_A_MRI)
-        elif ver == 'B':
-            settings.update(VER_B_MRI)
-        else:
-            raise ValueError, 'Version "{0}" not supported.'.format(ver)
+
     else:
         raise ValueError, 'Environment "{0}" not supported.'.format(env)
 
@@ -202,6 +211,6 @@ def parse_stimulus_name(trial):
         if type(trial[key]) is tuple:
             trial[key] = tup2str(stimulus_dir, trial[key], '.png')
         elif 'stimPic' in key and type(trial[key]) is str:
-            if trial[key] not in ['?', 'SWITCH']:
+            if trial[key] in shape:
                 trial[key] = stimulus_dir + trial[key] + '.png'
     return trial
