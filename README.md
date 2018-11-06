@@ -24,6 +24,15 @@ Project Organization
     └── stimuli            <- stimulus photos and experience sampling questions
 
 
+## Dependency
+The current version was tested on:
+Python 2.7.15
+Psychopy 1.85.6
+
+## Running the task
+Execute run.py
+
+
 ## Modifying experience sampling questions
 
 Change the questions/scales/lable in `stimuli/ES_questions.csv`.
