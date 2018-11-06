@@ -29,6 +29,7 @@ class Paradigm(object):
         else:
             self.window = visual.Window(size=window_size, color=color, allowGUI=True, units='pix', *args, **kwargs)
 
+
 class fixation_cross(object):
     '''
     fixation cross for this task
@@ -57,6 +58,7 @@ class fixation_cross(object):
         start_trial = clock.getTime()
         core.wait(self.duration)
         return start_trial
+
 
 class Text(object):
     '''
@@ -95,6 +97,7 @@ class Text(object):
         correct = None
 
         return start_trial, KeyResp, Resp, KeyPressTime, respRT, correct
+
 
 class responsescreen(object):
     '''
@@ -139,7 +142,7 @@ class responsescreen(object):
         if 'NoGo'in trial['TrialType']:
             self.line.fillColor = 'black'
             self.dash.fillColor = 'black'
-            
+
         elif 'Recog' in trial['TrialType']:
             self.line.fillColor = self.version['rec_color']
             self.dash.fillColor = self.version['rec_color']
@@ -156,10 +159,10 @@ class responsescreen(object):
             else:
                 self.line.fillColor = self.version['loc_color']
                 self.dash.fillColor = self.version['loc_color']
-            
+
             self.keylist = self.version['loc_keys']
             self.keyans = self.version['loc_keyans']
-                        
+
         if '?' == trial['stimPicLeft']:
             self.present_left = self.quest_left
             self.present_right = self.quest_right
@@ -223,6 +226,7 @@ class responsescreen(object):
 
         return start_trial, KeyResp, Resp, KeyPressTime, respRT, correct
 
+
 class Question(object):
     '''
     collect mind wandering report
@@ -263,7 +267,7 @@ class Question(object):
     def show(self, clock):
         keyState=key.KeyStateHandler()
         self.window.winHandle.push_handlers(keyState)
-        
+
         self.description.draw()
         self.scale_l.draw()
         self.scale_h.draw()
@@ -322,10 +326,12 @@ def get_keyboard(timer, respkeylist, keyans):
         Resp = keyans[respkeylist.index(KeyResp)]
     return KeyResp, Resp, KeyPressTime
 
+
 def quitEXP(endExpNow):
     if endExpNow:
         print 'user cancel'
         core.quit()
+
 
 class instructions(object):
     '''
@@ -362,10 +368,10 @@ class instructions(object):
 #                '{KEY_LOC_0}', self.settings['loc_keys'][0].upper())
 #        self.instruction_txt[2] = self.instruction_txt[2].replace(
 #                '{KEY_LOC_1}', self.settings['loc_keys'][1].upper())
-                
+
         self.instruction_txt[1] = self.instruction_txt[1].replace(
                 '{0_back_color}', self.settings['0_back_color'].upper())
-        
+
         self.instruction_txt[1] = self.instruction_txt[1].replace(
                 '{1_back_color}', self.settings['1_back_color'].upper())
         return self.instruction_txt
@@ -384,18 +390,21 @@ class instructions(object):
             else:
                 event.waitKeys(keyList=['return'])
 
-    def waitTrigger(self):
-        # wait for trigger; or just wait
+    def waitTrigger(self, trigger_code):
+        # wait for trigger in mri environment
         self.display.setText(self.ready_txt)
         self.display.draw()
         self.window.flip()
 
         if self.env == 'lab':
-            core.wait(uniform(1.3,1.75))
+            core.wait(0)
         elif self.env == 'mri':
-            event.waitKeys(keyList=['5'])
+            event.waitKeys(keyList=[trigger_code])
+        elif self.env == 'dev':
+            event.waitKeys(keyList=[trigger_code])
         else: # not supported
             raise Exception('Unknown environment setting')
+
 
 def subject_info(experiment_info):
     '''
@@ -422,6 +431,7 @@ def subject_info(experiment_info):
         core.quit()
         print 'User cancelled'
 
+
 def event_logger(logging_level, LogFile):
     '''
     log events
@@ -431,6 +441,7 @@ def event_logger(logging_level, LogFile):
 
     logging.console.setLevel(logging.WARNING)
     logging.LogFile(LogFile, level=logging_level)
+
 
 def get_stim_screen(trial, switch_screen, stimulus_screen):
     '''

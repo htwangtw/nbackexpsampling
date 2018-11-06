@@ -1,3 +1,10 @@
+06/11/2018
+
+Major update.
+
+* add experience sampling probes.
+See example_trial_generator.py for the limitation of the set-up.
+
 29/09/2017
 
 Intreme version of the task is ready.

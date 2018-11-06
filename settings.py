@@ -28,10 +28,6 @@ instr_txt = './instructions/exp_instr_es.txt'
 ready_txt = './instructions/wait_trigger.txt'
 
 
-# MRI related settings
-dummy_vol = 0
-tr = 2
-
 from psychopy import logging
 from src.fileIO import write_csv, create_headers, load_conditions_dict
 from src.datastructure.stimulus import stimulus_onefeat, stimulus_ExpSample
@@ -49,10 +45,12 @@ BASE = {
 }
 
 
-# Testing settings
-TEST = {
+# Development environment settings. Used for testing,
+# outside of the MR room.
+DEV = {
+    'env': 'dev',
     'test': True,
-    'window_size': (1280, 720),
+    'window_size': (800, 600),,
     'logging_level': logging.DEBUG
 }
 

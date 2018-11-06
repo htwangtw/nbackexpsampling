@@ -13,38 +13,40 @@ from settings import *
 from src.experiment import *
 from src.fileIO import read_only, write_csv
 
+
 INFO = {
-    'Experiment': 'nback_mpsych',  # compulsory
-    'Subject': 'R0001_001',  # compulsory
+    'Experiment': 'nback_expsampling',  # compulsory
+    'Subject': '001',  # compulsory
     'Run': '1',  # compulsory
     'Version': ['A', 'B'],  # counterbalance the fixation color
     'N-back': ['0', '1'],  # start the task with 1-back or 0-back
-    'Environment': ['mri', 'lab']
+    'Environment': ['mri', 'lab']  # mri version can be tested on a normal stimuli delivery pc
     }
 
-# collect participant info
-experiment_info = subject_info(INFO)
+# MRI related settings
+dummy_vol = 0
+tr = 2
+trigger_code = '5'
 
-# set up enviroment variables and generators
-# set test to False when collecting participant
-settings = get_settings(
-                env=experiment_info['Environment'],
-                ver=experiment_info['Version'], test=False)
 
-trial_generator, headers = get_trial_generator(experiment_info['N-back'])
+def run_experiment():
+    # collect participant info
+    experiment_info = subject_info(INFO)
 
-# skip instruction expect run 1
-if experiment_info['Run'] == '1':
-    skip_instruction = False
-else:
-    skip_instruction = True
+    # set up enviroment variables and generators
+    # set test to False when collecting participant
+    settings = get_settings(
+                    env=experiment_info['Environment'],
+                    ver=experiment_info['Version'], test=False)
 
-# now run this thing
-if __name__ == "__main__":
-    # set working directory as the location of this file
-    _thisDir = os.path.dirname(os.path.abspath(__file__)
-                               ).decode(sys.getfilesystemencoding())
-    os.chdir(_thisDir)
+    trial_generator, headers = get_trial_generator(experiment_info['N-back'])
+
+    # skip instruction expect run 1
+    if experiment_info['Run'] == '1':
+        skip_instruction = False
+    else:
+        skip_instruction = True
+
 
     # set log file
     event_logger(settings['logging_level'], experiment_info['LogFile'])
@@ -83,7 +85,7 @@ if __name__ == "__main__":
     # generate trials
     Experiment.trials = next(trial_generator)
     # wait trigger
-    instructions.waitTrigger()
+    instructions.waitTrigger(trigger_code)
     # get a global clock
     timer = core.Clock()
 
@@ -103,7 +105,7 @@ if __name__ == "__main__":
         fixation.set_trial(trial)
         fix_t = fixation.show(timer)
         print(trial['TrialType'])
-        
+
         if trial['TrialType'] == 'ExpSample':
             question.set(trial)
             start_stim, Resp, rt = question.show(timer)
@@ -147,3 +149,13 @@ if __name__ == "__main__":
     # quit
     Experiment.window.close()
     core.quit()
+
+# now run this thing
+if __name__ == "__main__":
+    # set working directory as the location of this file
+    _thisDir = os.path.dirname(os.path.abspath(__file__)
+                               ).decode(sys.getfilesystemencoding())
+    os.chdir(_thisDir)
+
+    run_experiment()
+
