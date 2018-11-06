@@ -39,7 +39,7 @@ Change the questions/scales/lable in `stimuli/ES_questions.csv`.
 Please leave the headers untouch.
 
 ## Modifying instructions
-'#' used as page breaker
+'#' is used as page breaker. 
 The text in between curly breackates {} changes in the experiment. Please do not modify the text inside the breakets.
 
 ## Modifying MRI related setting
