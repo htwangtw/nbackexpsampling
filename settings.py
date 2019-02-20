@@ -50,7 +50,7 @@ BASE = {
 DEV = {
     'env': 'dev',
     'test': True,
-    'window_size': (800, 600),,
+    'window_size': (800, 600),
     'logging_level': logging.DEBUG
 }
 
