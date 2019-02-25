@@ -7,11 +7,7 @@ build the main program here
 import os
 import sys
 
-from psychopy import core, event, logging, visual
 
-from settings import *
-from src.experiment import *
-from src.fileIO import read_only, write_csv
 
 
 INFO = {
@@ -30,6 +26,11 @@ trigger_code = '5'
 
 
 def run_experiment():
+    from psychopy import core, event, logging, visual
+
+    from settings import *
+    from src.experiment import *
+    from src.fileIO import read_only, write_csv
     # collect participant info
     experiment_info = subject_info(INFO)
 
