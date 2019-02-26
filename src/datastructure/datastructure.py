@@ -272,7 +272,7 @@ class trial_builder(object):
             init_task_t, init_go_n = experiment_parameters.create_counter()
 
             for block in blocks:
-                self.initialise(init_task_t, [8, 8]) # HW- hard coding go_n this for now
+                self.initialise(init_task_t, init_go_n) # HW- hard coding go_n this for now
 
                 # get the specific go trials according to the block you are in
                 trial_NoGo, trial_Go = self.block_trials(
@@ -338,7 +338,8 @@ class trial_builder(object):
                     self.save_trial(cur_trial, 'Switch')
                     if self.task_t != 0:
                         # if this list of trials is not good for the block, restart
-                        self.initialise(init_task_t, [8, 8])# HW- hard coding go_n this for now
+                        init_task_t, init_go_n = experiment_parameters.create_counter()
+                        self.initialise(init_task_t, init_go_n)# HW- hard coding go_n this for now
                         self.trial_index = trial_idx_tmp
                     else:
                         # if it's good save this block to the run
