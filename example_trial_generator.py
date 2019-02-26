@@ -41,9 +41,10 @@ block = None # accept values: '0', '1', None
 # now define the generators
 # create experiment parameters
 # a 1.5 min block can have 6 catch trials max for a pure 0-/1-back task
+# (block_length=3, block_go_n=6)
 # a 12 min block can have 8 go-task trials and 8 experience sampling probes max
+# (block_length=12, block_go_n=16)
 # runs - minimum 1;
-# please don't change the setting here as there are unresolved bugs
 parameters = experiment_parameters(block_length=12, block_go_n=16, runs=1)
 parameters.load_conditions(condition_path)
 parameters.load_header(trialheader_path)
