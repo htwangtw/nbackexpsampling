@@ -7,9 +7,6 @@ build the main program here
 import os
 import sys
 
-
-
-
 INFO = {
     'Experiment': 'nback_expsampling',  # compulsory
     'Subject': '001',  # compulsory
@@ -29,7 +26,9 @@ def run_experiment():
     from psychopy import core, event, logging, visual
 
     from settings import *
-    from src.experiment import *
+    from src.experiment import (event_logger, Paradigm, fixation_cross,
+                                Text, Question, responsescreen, instructions,
+                                subject_info)
     from src.fileIO import read_only, write_csv
     # collect participant info
     experiment_info = subject_info(INFO)
@@ -85,8 +84,9 @@ def run_experiment():
 
     # generate trials
     Experiment.trials = next(trial_generator)
-    # wait trigger
-    instructions.waitTrigger(trigger_code)
+    if experiment_info['Environment'] is 'mri':
+        # wait trigger
+        instructions.waitTrigger(trigger_code)
     # get a global clock
     timer = core.Clock()
 
@@ -154,8 +154,7 @@ def run_experiment():
 # now run this thing
 if __name__ == "__main__":
     # set working directory as the location of this file
-    _thisDir = os.path.dirname(os.path.abspath(__file__)
-                               ).decode(sys.getfilesystemencoding())
+    _thisDir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(_thisDir)
 
     run_experiment()

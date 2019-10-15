@@ -181,7 +181,7 @@ def get_settings(env, ver, test=False):
     elif ver == 'B':
         settings.update(EXP_SAMPLING_B)
     else:
-        raise ValueError, 'Version "{0}" not supported.'.format(ver)
+        raise ValueError('Version "{0}" not supported.'.format(ver))
 
     if env == 'lab':
         settings.update(LAB)
@@ -191,7 +191,7 @@ def get_settings(env, ver, test=False):
         settings.update(MRI)
 
     else:
-        raise ValueError, 'Environment "{0}" not supported.'.format(env)
+        raise ValueError('Environment "{0}" not supported.'.format(env))
 
     # Update it with either the test or production settings
 

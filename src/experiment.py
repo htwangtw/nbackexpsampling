@@ -329,7 +329,7 @@ def get_keyboard(timer, respkeylist, keyans):
 
 def quitEXP(endExpNow):
     if endExpNow:
-        print 'user cancel'
+        print('user cancel')
         core.quit()
 
 
@@ -429,7 +429,7 @@ def subject_info(experiment_info):
         return experiment_info
     else:
         core.quit()
-        print 'User cancelled'
+        print('User cancelled')
 
 
 def event_logger(logging_level, LogFile):
