@@ -21,13 +21,13 @@ dummy_vol = 0
 tr = 2
 trigger_code = '5'
 
-
+from settings import *
 def run_experiment():
     from psychopy import core, event, logging, visual
 
-    from settings import *
+    
     from src.experiment import (event_logger, Paradigm, fixation_cross,
-                                Text, Question, responsescreen, instructions,
+                                Text, Question, get_stim_screen, responsescreen, instructions,
                                 subject_info)
     from src.fileIO import read_only, write_csv
     # collect participant info

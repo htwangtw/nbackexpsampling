@@ -250,7 +250,7 @@ class Question(object):
         wrapWidth=1100, pos=[300,-150],color=color, font=sans)
         self.questions = questions
         self.rating = visual.RatingScale(self.window, low=1, high=10, markerStart=5,
-                precision=10, tickMarks=[1, 10],
+                precision=10, tickMarks=[1, 10], labels=[1, 10],
                 leftKeys='1', rightKeys='2', acceptKeys='4')
 
     def set(self, trial):
@@ -261,8 +261,6 @@ class Question(object):
             self.scale_max_time = trial['stim_duration']
         else:
             self.scale_max_time = 90
-
-
 
     def show(self, clock):
         keyState=key.KeyStateHandler()
