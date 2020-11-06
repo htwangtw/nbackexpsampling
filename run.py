@@ -25,7 +25,7 @@ from settings import *
 def run_experiment():
     from psychopy import core, event, logging, visual
 
-    
+
     from src.experiment import (event_logger, Paradigm, fixation_cross,
                                 Text, Question, get_stim_screen, responsescreen, instructions,
                                 subject_info)

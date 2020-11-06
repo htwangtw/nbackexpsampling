@@ -243,9 +243,7 @@ class trial_builder(object):
     def build(self, experiment_parameters, trial_finder, \
               stimulus_generator, expsampling_generator, block):
         '''
-        This feature doesn't integrate experience sampling for now
-
-        now let's build the trial generator
+        build the trial generator
 
         experiment_parameters: obj
             store experiment parameter
@@ -295,7 +293,6 @@ class trial_builder(object):
                         # generate the go trial
                         # go trial: type 1 or type 2
                         # see which go trial type were all used
-                        # need to integrate experience sampling here
                         use_go = [i for i, e in enumerate(self.go_n) if e > 0]
                         if use_go:
                             # select a random one from the available ones

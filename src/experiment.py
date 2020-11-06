@@ -261,6 +261,7 @@ class Question(object):
             self.scale_max_time = trial['stim_duration']
         else:
             self.scale_max_time = 90
+        self.rating.markerStart = trial['Ans']  # Ans column for ES marks the random starting point
 
     def show(self, clock):
         keyState=key.KeyStateHandler()

@@ -45,7 +45,7 @@ block = None # accept values: '0', '1', None
 # a 12 min block can have 8 go-task trials and 8 experience sampling probes max
 # (block_length=12, block_go_n=16)
 # runs - minimum 1;
-parameters = experiment_parameters(block_length=12, block_go_n=16, runs=1)
+parameters = experiment_parameters(block_length=6, block_go_n=8, runs=1)
 parameters.load_conditions(condition_path)
 parameters.load_header(trialheader_path)
 
@@ -85,11 +85,11 @@ for trial in trials:
     # when storing experiment data
     #
     # the stimulus is saved as a tuple in the dictionar, use tup2str function in module stimulus
-    # uncomment the following lines to compare theout put
-    #
+    # uncomment the following lines to compare the out put
+
     write_csv(fileName='example_run1.csv', list_headers=parameters.headers, thisTrial=trial)
 
 # to get run two: (only if the setting is  on)
-# trials = next(trial_generator)
-# for trial in trials:
-#     write_csv(fileName='example_run2.csv', list_headers=parameters.headers, thisTrial=trial)
+trials = next(trial_generator)
+for trial in trials:
+    write_csv(fileName='example_run2.csv', list_headers=parameters.headers, thisTrial=trial)

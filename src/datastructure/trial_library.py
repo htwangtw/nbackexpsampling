@@ -67,7 +67,8 @@ class ExpSample(object):
 
             dict_row['stimPicLeft'] = item['Scale_low']
             dict_row['stimPicRight'] =  item['Scale_high']
-            dict_row['Ans'] = None
+            rand_marker_start = round(uniform(1, 10), 1)
+            dict_row['Ans'] = str(rand_marker_start)
 
             dict_row['stimPicMid'] = item['Item']
 
