@@ -1,3 +1,8 @@
+13/11/2020
+
+* Update documentations.
+* Remove condition randomisation in datastrucutre module. Use explicit set up by parameters.
+
 06/11/2018
 
 Major update.
