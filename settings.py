@@ -12,7 +12,7 @@ shape = ['square', 'triangle', 'circle']
 # texture = ['dot', 'solid', 'stripe']
 
 # locate path of experiment specification related files
-condition_path = './parameters/ConditionsSpecifications_ES.csv'
+condition_path = None  # set later by subject info input
 trialheader_path = './parameters/TrialHeaders.csv'
 trialspec_path = './parameters/TrialSpecifications.csv'
 stimulus_dir = './stimuli/'
@@ -143,6 +143,11 @@ def get_trial_generator(block):
     '''
     # now define the generators
     # create experiment parameters
+    if block == "0":
+        condition_path = './parameters/ConditionsSpecifications_ES_zeroback.csv'
+    elif block == "1":
+        condition_path = './parameters/ConditionsSpecifications_ES_oneback.csv'
+
     parameters = experiment_parameters(
             block_length=BLOCK_TIME, block_go_n=BLOCK_GO_N, runs=1)
     parameters.load_conditions(condition_path)

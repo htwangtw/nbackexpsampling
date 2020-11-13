@@ -5,7 +5,7 @@ The task uses a n-back memory paradigm intending to induce mind-wandering.
 Reference:
 
 Konishi, M., McLaren, D. G., Engen, H., & Smallwood, J. (2015). Shaped by the past: the default mode network supports cognition that is independent of immediate perceptual input. PloS One, 10(6), e0132209. http://doi.org/10.1371/journal.pone.0132209
-
+Please see the summary of the paradigmn [here](references/paradigm_flow.md)
 
 
 Project Organization
@@ -20,26 +20,32 @@ Project Organization
     ├── instructions       <- Instructions .txt files.
     ├── data               <- Data generated from the task. Read-only.
     ├── parameters         <- Trial generation specification files.
+    ├── references         <- Supplemental details of the paradigmn.
     ├── src                <- Source code for use in this project.
     └── stimuli            <- stimulus photos and experience sampling questions
 
 
 ## Dependency
 The current version was tested on:
-Python 2.7.15
-Psychopy 1.85.6
+Python 3.7.5
+Psychopy 2020.2.4post1
 
 ## Running the task
-Execute run.py
+Execute run.py through commend line:
+`python run.py`
 
+# Modifying the length of the experiment
+Currently the experiment length, probe number, condition order are set through files in `parameters` and module `datastructure`.
+The content of `parameters/ConditionsSpecifications_ES.csv` determine the condition switching structure.
+The current file populate a design of two blocks, starting with a zero-back block, and two type of go trials.
+Please see `example_trial_generator.py` for details related to the module `datastructure`.
 
 ## Modifying experience sampling questions
-
 Change the questions/scales/lable in `stimuli/ES_questions.csv`.
 Please leave the headers untouch.
 
 ## Modifying instructions
-'#' is used as page breaker. 
+'#' is used as page breaker.
 The text in between curly breackates {} changes in the experiment. Please do not modify the text inside the breakets.
 
 ## Modifying MRI related setting
@@ -52,5 +58,4 @@ If you use parallel port, please contact your local support to find out the sett
 
 The dummy volumes are accounted for in the scanner used at York.
 If you require manual set up, please modify the variable in `run.py` accordingly.
-
-
+Or write a parallel port module fitting your own setup to map respond buttons to key 1 to 9. (Highly recommended.)

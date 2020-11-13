@@ -24,12 +24,12 @@ questions, _ = load_conditions_dict('./stimuli/ES_questions.csv')
 # locate path of experiment specification related files
 
 # ConditionsSpecifications.csv:
-#        original design
-# ConditionsSpecifications_ES.csv:
-#       0 back condition,
-#       the experience sampling part has not been implemented yet
+#   original design
+# ConditionsSpecifications_ES_zeroback.csv:
+#    0-back condition and experience sampling
+
 # condition_path = './parameters/ConditionsSpecifications.csv'
-condition_path = './parameters/ConditionsSpecifications_ES.csv'
+condition_path = './parameters/ConditionsSpecifications_ES_zeroback.csv'
 
 trialheader_path = './parameters/TrialHeaders.csv'
 trialspec_path = './parameters/TrialSpecifications.csv'
@@ -90,6 +90,6 @@ for trial in trials:
     write_csv(fileName='example_run1.csv', list_headers=parameters.headers, thisTrial=trial)
 
 # to get run two: (only if the setting is  on)
-trials = next(trial_generator)
-for trial in trials:
-    write_csv(fileName='example_run2.csv', list_headers=parameters.headers, thisTrial=trial)
+# trials = next(trial_generator)
+# for trial in trials:
+#     write_csv(fileName='example_run2.csv', list_headers=parameters.headers, thisTrial=trial)

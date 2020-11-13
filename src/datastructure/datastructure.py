@@ -147,36 +147,6 @@ class trial_builder(object):
         self.last_trial = None
         self.trial_index = self.init_trial_index
 
-    def set_block_sequence(self, conditions, block=None):
-
-        '''
-        support two types of block conditions for now
-        This module is so crap....
-
-        options: random sequence, starting from 1-back or 0-back
-
-        conditions: list
-            a list of conditions
-            the item in the list are csv file entry as dictionaries
-            the csv file entries should not use numbers (i.e.1 and 0)
-            otherwise the behaviour will not work as expected
-
-        block: '0', '1'
-            starting from 1 back, starting from 0 back
-        return
-            conditions, shuffled: lst
-        '''
-        if block == '1':
-            # use Ordereddict form python in-built library `collections`
-            conditions = sorted(conditions,
-            reverse=False, key=lambda t: t['Condition'])
-        elif block == '0':
-            conditions = sorted(conditions,
-            reverse=True, key=lambda t: t['Condition'])
-        else:
-            pass # low priority to-do: shuffle the conditions
-
-        return conditions
 
     def block_trials(self, trial_finder, block, trial_headers):
 
@@ -261,8 +231,8 @@ class trial_builder(object):
         '''
         for cur in range(experiment_parameters.runs):
 
-            # shuffle the blocks or start from 1-/0-back
-            blocks = self.set_block_sequence(experiment_parameters.conditions, block)
+            # load condtions
+            blocks = experiment_parameters.conditions.copy()
             # initialize the output storage and the counter
             run  = []
             trial_idx_tmp = 0
